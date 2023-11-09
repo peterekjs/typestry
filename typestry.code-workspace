@@ -1,0 +1,68 @@
+{
+  "extensions": {
+    "recommendations": [
+      "steoates.autoimport",
+      "mgmcdermott.vscode-language-babel",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "antfu.vite"
+    ]
+  },
+  "folders": [
+    {
+      "name": "typestry",
+      "path": "."
+    },
+    {
+      "name": "@typestry/identity",
+      "path": "packages/identity"
+    }
+  ],
+  "settings": {
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": {
+      "source.format": "explicit",
+      "source.fixAll": "explicit",
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": false,
+    "editor.formatOnSaveMode": "file",
+    "editor.formatOnType": false,
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+      "editor.formatOnSave": true
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+      "editor.formatOnSave": true
+    },
+    "eslint.format.enable": true,
+    "eslint.nodePath": "",
+    "eslint.validate": [
+      "typescript"
+    ],
+    "files.eol": "\n",
+    "typescript.tsdk": "typestry/node_modules/typescript/lib",
+    "vite.open": false
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [{
+      "type": "shell",
+      "command": "git remote prune origin && git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -d",
+      "problemMatcher": [],
+      "label": "git: clean",
+      "detail": "Clean all merged branches."
+    }, {
+      "type": "shell",
+      "command": "git remote prune origin && git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D",
+      "problemMatcher": [],
+      "label": "git: clean:force",
+      "detail": "Clean all merged & unmerged branches. Use only when you know what are you doing."
+    }]
+  }
+}

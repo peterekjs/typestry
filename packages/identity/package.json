@@ -1,0 +1,57 @@
+{
+  "name": "@typestry/identity",
+  "version": "0.0.0",
+  "description": "Type identity TypeScript/JavaScript helpers",
+  "keywords": [
+    "typescript",
+    "ts",
+    "javascript",
+    "js",
+    "identity",
+    "type"
+  ],
+  "author": "Jiri Peterek <jiri@peterek.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/peterekjs/typestry/issues"
+  },
+  "homepage": "https://github.com/peterekjs/typestry#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peterekjs/typestry.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false,
+  "type": "module",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "typesVersions": {
+    ">=5": {
+      "index": [
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "coverage": "vitest run --coverage",
+    "dev": "vite build --watch",
+    "lint": "eslint --fix --format codeframe .",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "dependencies": {
+    "ts-essentials": "^10.0.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "include": [
+    "vite.config.*",
+    "vitest.config.*",
+    "src/**/*"
+  ],
+  "compilerOptions": {
+    "rootDir": "./src",
+    "declarationDir": "./dist",
+    "composite": true,
+    "target": "es2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ESNext"]
+  }
+}
