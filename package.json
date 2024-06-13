@@ -26,6 +26,8 @@
   "type": "module",
   "scripts": {
     "coverage": "vitest run --coverage",
+    "lint": "eslint --fix --format codeframe .",
+    "lint:ci": "eslint --no-fix .",
     "test": "vitest",
     "test:ci": "vitest run",
     "test:ui": "vitest --ui"
