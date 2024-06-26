@@ -1,5 +1,5 @@
 import { PRIMITIVE_KEYS, drop, pick, testIdentity } from '../../test/common'
-import { $any, $array, $assignable, $nil, $null, $object, $primitive } from './basics'
+import { $any, $array, $assignable, $defined, $nil, $object, $primitive } from './derivates'
 
 testIdentity(
   $object,
@@ -23,7 +23,7 @@ testIdentity(
 )
 
 testIdentity($any, drop([]))
-testIdentity($null, pick(['null']))
+testIdentity($defined, drop(['undefined']))
 testIdentity($nil, pick(['undefined', 'null']))
 testIdentity($array, pick(['empty array', 'non-empty array']))
 

@@ -1,5 +1,5 @@
-import { drop, pick, testIdentity } from '../../test/common'
-import { $bigint, $boolean, $defined, $number, $string, $symbol, $undefined } from './primitives'
+import { pick, testIdentity } from '../../test/common'
+import { $bigint, $boolean, $null, $number, $string, $symbol, $undefined } from './primitives'
 
 testIdentity($bigint, pick(['bigint']))
 testIdentity($boolean, pick(['boolean (false)', 'boolean (true)']))
@@ -20,4 +20,4 @@ testIdentity(
 testIdentity($string, pick(['empty string', 'non-empty string']))
 testIdentity($symbol, pick(['symbol']))
 testIdentity($undefined, pick(['undefined']))
-testIdentity($defined, drop(['undefined']))
+testIdentity($null, pick(['null']))

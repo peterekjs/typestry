@@ -1,4 +1,4 @@
-import type { Defined, TypeIdentifier } from '../definitions'
+import type { TypeIdentifier } from '../definitions'
 import { describeType } from '../describe'
 import { createIdentifier } from '../identifier'
 
@@ -10,8 +10,6 @@ const $symbol: TypeIdentifier<symbol> = createIdentifier(describeType('symbol', 
 const $undefined: TypeIdentifier<undefined> = createIdentifier(
   describeType('undefined', (v): v is undefined => typeof v === 'undefined')
 )
-const $defined: TypeIdentifier<Defined<unknown>> = createIdentifier(
-  describeType('defined', (v): v is Defined<unknown> => typeof v !== 'undefined')
-)
+const $null: TypeIdentifier<null> = createIdentifier(describeType('null', (v): v is null => v === null))
 
-export { $bigint, $boolean, $number, $string, $symbol, $undefined, $defined }
+export { $bigint, $boolean, $null, $number, $string, $symbol, $undefined }

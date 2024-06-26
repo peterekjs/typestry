@@ -1,7 +1,7 @@
 import type { TypeIdentifier } from '../definitions'
 import { describeInstance, describeType } from '../describe'
 import { createIdentifier } from '../identifier'
-import { $assignable } from './basics'
+import { $assignable } from './derivates'
 
 const $Map: TypeIdentifier<Map<any, any>> = createIdentifier(describeInstance(Map))
 const $Set: TypeIdentifier<Set<any>> = createIdentifier(describeInstance(Set))

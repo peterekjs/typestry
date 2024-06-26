@@ -10,7 +10,9 @@ const $function: TypeIdentifier<AnyFunction> = createIdentifier(
 const $class: TypeIdentifier<new () => object> = createIdentifier(
   describeType('class', (v): v is new () => object => getType(v) === 'class')
 )
-const $AnyFunction: TypeIdentifier<AnyFunction> = $function
+const $AnyFunction: TypeIdentifier<AnyFunction> = createIdentifier(
+  describeType('AnyFunction', (v): v is AnyFunction => typeof v === 'function')
+)
 const $Function: TypeIdentifier<Generator<any>> = createIdentifier(
   describeType('Function', (v): v is Generator<any> => getType(v) === 'Function')
 )

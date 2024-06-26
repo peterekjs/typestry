@@ -7,6 +7,15 @@ function* mergeProps<T extends TypeDescriptor<any>[]>(descriptions: T) {
   }
 }
 
+function* collectDescriptors(identifiers: Iterable<TypeIdentifier<any>>) {
+  for (const identifier of identifiers) {
+    if (!identifier?.descriptor) {
+      throw new ReferenceError('TypeDescriptor does not exist', { cause: identifiers })
+    }
+    yield identifier.descriptor
+  }
+}
+
 function mergeDescriptors<T extends TypeDescriptor<any>[]>(...descriptions: T): MergedDescriptor<T> {
   function validate(input: unknown) {
     return descriptions.some((x) => x.validate(input))
@@ -28,7 +37,7 @@ function mergeDescriptors<T extends TypeDescriptor<any>[]>(...descriptions: T): 
 }
 
 function mergeIdentifiers<T extends TypeIdentifier<any>[]>(...identifiers: T): MergedIdentifier<T> {
-  return createIdentifier(mergeDescriptors(...identifiers.map((x) => x.descriptor)) as any) as MergedIdentifier<T>
+  return createIdentifier(mergeDescriptors(...collectDescriptors(identifiers))) as MergedIdentifier<T>
 }
 
 export { mergeDescriptors, mergeIdentifiers }
