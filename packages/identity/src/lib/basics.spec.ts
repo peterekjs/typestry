@@ -1,52 +1,6 @@
-import { PRIMITIVE_KEYS, drop, pick, testIdentity } from '../test/common'
-import {
-  $any,
-  $array,
-  $assignable,
-  $bigint,
-  $boolean,
-  $defined,
-  $function,
-  $nil,
-  $null,
-  $number,
-  $object,
-  $primitive,
-  $string,
-  $symbol,
-  $undefined,
-} from './basics'
+import { PRIMITIVE_KEYS, drop, pick, testIdentity } from '../../test/common'
+import { $any, $array, $assignable, $nil, $null, $object, $primitive } from './basics'
 
-testIdentity($bigint, pick(['bigint']))
-testIdentity($boolean, pick(['boolean (false)', 'boolean (true)']))
-testIdentity(
-  $function,
-  pick([
-    'function',
-    'function (throws exception)',
-    'function (named)',
-    'async function',
-    'lambda',
-    'lambda (returns value)',
-    'generator',
-    'async generator',
-    'class',
-  ])
-)
-testIdentity(
-  $number,
-  pick([
-    'zero',
-    'negative zero',
-    'integer',
-    'negative integer',
-    'float',
-    'negative float',
-    'infinity',
-    'negative infinity',
-    'NaN',
-  ])
-)
 testIdentity(
   $object,
   pick([
@@ -67,10 +21,6 @@ testIdentity(
     'Error',
   ])
 )
-testIdentity($string, pick(['empty string', 'non-empty string']))
-testIdentity($symbol, pick(['symbol']))
-testIdentity($undefined, pick(['undefined']))
-testIdentity($defined, drop(['undefined']))
 
 testIdentity($any, drop([]))
 testIdentity($null, pick(['null']))

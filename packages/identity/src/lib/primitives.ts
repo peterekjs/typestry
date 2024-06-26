@@ -1,0 +1,17 @@
+import type { Defined, TypeIdentifier } from '../definitions'
+import { describeType } from '../describe'
+import { createIdentifier } from '../identifier'
+
+const $bigint: TypeIdentifier<bigint> = createIdentifier(describeType('bigint', (v): v is bigint => typeof v === 'bigint'))
+const $boolean: TypeIdentifier<boolean> = createIdentifier(describeType('boolean', (v): v is boolean => typeof v === 'boolean'))
+const $number: TypeIdentifier<number> = createIdentifier(describeType('number', (v): v is number => typeof v === 'number'))
+const $string: TypeIdentifier<string> = createIdentifier(describeType('string', (v): v is string => typeof v === 'string'))
+const $symbol: TypeIdentifier<symbol> = createIdentifier(describeType('symbol', (v): v is symbol => typeof v === 'symbol'))
+const $undefined: TypeIdentifier<undefined> = createIdentifier(
+  describeType('undefined', (v): v is undefined => typeof v === 'undefined')
+)
+const $defined: TypeIdentifier<Defined<unknown>> = createIdentifier(
+  describeType('defined', (v): v is Defined<unknown> => typeof v !== 'undefined')
+)
+
+export { $bigint, $boolean, $number, $string, $symbol, $undefined, $defined }

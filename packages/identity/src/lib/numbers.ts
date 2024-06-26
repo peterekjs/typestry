@@ -2,7 +2,7 @@ import type { TypeIdentifier } from '../definitions'
 import { describeType } from '../describe'
 import { createIdentifier } from '../identifier'
 
-import { $number } from './basics'
+import { $number } from './primitives'
 
 const $NaN: TypeIdentifier<typeof NaN> = createIdentifier(
   describeType('NaN', (v: unknown): v is typeof NaN => $number.is(v) && isNaN(v))

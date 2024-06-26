@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { type ExtendedTypeOf } from './definitions'
 import { assert, getType, isObject } from './helpers'
-import { TEST_VALUES, type TestKey } from './test/common'
+import { TEST_VALUES, type TestKey } from '../test/common'
 
 describe('helpers', () => {
   test('assert', () => {

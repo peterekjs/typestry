@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { TypeIdentifier } from '../definitions'
+import { TypeIdentifier } from '../src/definitions'
 
 const TEST_VALUES = {
   'empty string': '',

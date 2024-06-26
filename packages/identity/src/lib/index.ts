@@ -1,3 +1,5 @@
+export * from './primitives'
 export * from './basics'
+export * from './functions'
 export * from './numbers'
 export * from './objects'

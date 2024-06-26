@@ -3,10 +3,11 @@
   "include": [
     "vite.config.*",
     "vitest.config.*",
-    "src/**/*"
+    "src/**/*",
+    "test/**/*"
   ],
   "compilerOptions": {
-    "rootDir": "./src",
+    "rootDir": "./",
     "declarationDir": "./dist",
     "composite": true,
     "target": "es2022",

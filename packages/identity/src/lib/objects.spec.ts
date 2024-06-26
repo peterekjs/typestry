@@ -1,4 +1,4 @@
-import { pick, testIdentity } from '../test/common'
+import { pick, testIdentity } from '../../test/common'
 import {
   $Iterable,
   $AsyncIterable,
