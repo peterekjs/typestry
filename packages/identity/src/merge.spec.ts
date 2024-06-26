@@ -1,16 +1,16 @@
 import { describe, expect, test } from 'vitest'
 import { describeType } from './describe'
-import { mergeTypes } from './merge'
+import { mergeDescriptors } from './merge'
 
 const validateBoolean = (v: unknown): v is boolean => typeof v === 'boolean'
 const validateNumber = (v: unknown): v is number => typeof v === 'number'
 
 describe('merge', () => {
-  test('mergeTypes', () => {
+  test('mergeDescriptors', () => {
     const booleanType = describeType('boolean', validateBoolean)
     const numberType = describeType('number', validateNumber)
 
-    const booleanOrNumberType = mergeTypes(booleanType, numberType)
+    const booleanOrNumberType = mergeDescriptors(booleanType, numberType)
 
     expect(booleanOrNumberType.name).to.be.eq('boolean | number')
     expect(booleanOrNumberType.validate(true)).to.be.true

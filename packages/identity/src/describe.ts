@@ -1,4 +1,4 @@
-import type { PropDescriptions, TypeDescription, TypeFromPropDescriptions } from './definitions'
+import type { PropDescriptors, TypeDescriptor, TypeFromPropDescriptors } from './definitions'
 import { assert, isObject } from './helpers'
 
 function describeType<T>(
@@ -7,7 +7,7 @@ function describeType<T>(
   props: T extends NonNullable<unknown> ? Set<keyof T> : Set<never> = new Set() as T extends NonNullable<unknown>
     ? Set<keyof T>
     : Set<never>
-): TypeDescription<T> {
+): TypeDescriptor<T> {
   return {
     name,
     validate,
@@ -23,7 +23,7 @@ function describeType<T>(
   }
 }
 
-function describeInstance<T>(Ctor: new () => T, instantiator: () => T = () => new Ctor()): TypeDescription<T> {
+function describeInstance<T>(Ctor: new () => T, instantiator: () => T = () => new Ctor()): TypeDescriptor<T> {
   const props = new Set(Object.keys(instantiator() ?? Object.getOwnPropertyDescriptors(Ctor).prototype.value) as (keyof T)[])
 
   function validate(input: unknown): input is T {
@@ -45,18 +45,18 @@ function describeInstance<T>(Ctor: new () => T, instantiator: () => T = () => ne
   }
 }
 
-function describeArray<T extends TypeDescription<any>>(
-  description: T
-): T extends TypeDescription<infer S> ? TypeDescription<S[]> : never {
+function describeArray<T extends TypeDescriptor<any>>(
+  descriptor: T
+): T extends TypeDescriptor<infer S> ? TypeDescriptor<S[]> : never {
   function validate(input: unknown) {
-    return Array.isArray(input) && input.every(description.validate)
+    return Array.isArray(input) && input.every(descriptor.validate)
   }
 
   return {
-    name: `${description.name}[]`,
+    name: `${descriptor.name}[]`,
     validate,
     equals(a, b) {
-      return Array.isArray(a) && Array.isArray(b) && a.length === b.length && a.every((v, i) => description.equals(v, b[i]))
+      return Array.isArray(a) && Array.isArray(b) && a.length === b.length && a.every((v, i) => descriptor.equals(v, b[i]))
     },
     get isObject() {
       return false
@@ -64,21 +64,21 @@ function describeArray<T extends TypeDescription<any>>(
     get props() {
       return new Set()
     },
-  } as T extends TypeDescription<infer S> ? TypeDescription<S[]> : never
+  } as T extends TypeDescriptor<infer S> ? TypeDescriptor<S[]> : never
 }
 
 const hasOwn = <T extends NonNullable<unknown>>(input: object, key: keyof T): input is T => Object.hasOwn(input, key)
 
-function describeObject<P extends PropDescriptions<NonNullable<unknown>>>(
+function describeObject<P extends PropDescriptors<NonNullable<unknown>>>(
   name: string,
-  propDescriptions: P
-): TypeDescription<TypeFromPropDescriptions<P>> {
-  assert(isObject(propDescriptions), 'prop descriptions')
+  propDescriptors: P
+): TypeDescriptor<TypeFromPropDescriptors<P>> {
+  assert(isObject(propDescriptors), 'prop descriptions')
 
-  type T = TypeFromPropDescriptions<P>
+  type T = TypeFromPropDescriptors<P>
 
-  const props = new Set(Object.keys(propDescriptions) as (T extends NonNullable<unknown> ? keyof T : never)[])
-  const getPropEntries = () => Object.entries(propDescriptions) as [keyof T, TypeDescription<T[keyof T]>][]
+  const props = new Set(Object.keys(propDescriptors) as (T extends NonNullable<unknown> ? keyof T : never)[])
+  const getPropEntries = () => Object.entries(propDescriptors) as [keyof T, TypeDescriptor<T[keyof T]>][]
 
   function validate(input: unknown): input is T {
     return isObject(input) && getPropEntries().every(([k, v]) => hasOwn(input, k) && v.validate(input[k]))

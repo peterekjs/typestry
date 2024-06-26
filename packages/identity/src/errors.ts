@@ -1,19 +1,19 @@
-import type { TypeDescription } from './definitions'
+import type { TypeDescriptor } from './definitions'
 
 class AssertionError extends Error {
-  constructor(conditionDescription: string, options?: ErrorOptions) {
-    super(`Expected ${conditionDescription}`, options)
+  constructor(conditionDescriptor: string, options?: ErrorOptions) {
+    super(`Expected ${conditionDescriptor}`, options)
     this.name = 'AssertionError'
   }
 }
 class TypeAssertionError<T> extends AssertionError {
-  expected: TypeDescription<T>
+  expected: TypeDescriptor<T>
   received: any
 
-  constructor(description: TypeDescription<T>, received: any) {
-    super(description.name, { cause: { expected: description, received } })
+  constructor(descriptor: TypeDescriptor<T>, received: any) {
+    super(descriptor.name, { cause: { expected: descriptor, received } })
     this.name = 'TypeAssertionError'
-    this.expected = description
+    this.expected = descriptor
     this.received = received
   }
 }

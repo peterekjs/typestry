@@ -6,7 +6,7 @@ type Assignable = ObjectLike | AnyFunction
 
 type Assert = (condition: unknown, message?: string) => asserts condition
 
-type TypeDescription<T, P = T extends object ? keyof T : never> = {
+type TypeDescriptor<T, P = T extends object ? keyof T : never> = {
   name: string
   validate: (input: unknown) => input is T
   equals(a: T, b: T): boolean
@@ -14,19 +14,19 @@ type TypeDescription<T, P = T extends object ? keyof T : never> = {
   readonly props: Set<P>
 }
 
-type TypeIdentity<T> = {
+type TypeIdentifier<T> = {
   is(input: unknown): input is T
   assert(input: unknown): asserts input is T
   ensure(input: unknown): T
-  description: TypeDescription<T>
+  descriptor: TypeDescriptor<T>
 }
 
-type PropDescriptions<T> = { [K in keyof T]: TypeDescription<T[K]> }
+type PropDescriptors<T> = { [K in keyof T]: TypeDescriptor<T[K]> }
 
-type TypeFromDescription<T extends TypeDescription<unknown>> = T extends TypeDescription<infer S> ? S : never
-type TypeFromDescriptions<T extends TypeDescription<any>[]> = T[number] extends TypeDescription<infer S> ? S : never
-type TypeFromIdentity<T extends TypeIdentity<unknown>> = T extends TypeIdentity<infer S> ? S : never
-type TypeFromPropDescriptions<T extends PropDescriptions<unknown>> = T extends PropDescriptions<infer S> ? S : never
+type TypeFromDescriptor<T extends TypeDescriptor<unknown>> = T extends TypeDescriptor<infer S> ? S : never
+type TypeFromDescriptors<T extends TypeDescriptor<any>[]> = T[number] extends TypeDescriptor<infer S> ? S : never
+type TypeFromIdentity<T extends TypeIdentifier<unknown>> = T extends TypeIdentifier<infer S> ? S : never
+type TypeFromPropDescriptors<T extends PropDescriptors<unknown>> = T extends PropDescriptors<infer S> ? S : never
 
 export type {
   Assert,
@@ -34,11 +34,11 @@ export type {
   Defined,
   ObjectLike,
   Primitive,
-  PropDescriptions,
-  TypeDescription,
-  TypeFromDescription,
-  TypeFromDescriptions,
+  PropDescriptors,
+  TypeDescriptor,
+  TypeFromDescriptor,
+  TypeFromDescriptors,
   TypeFromIdentity,
-  TypeFromPropDescriptions,
-  TypeIdentity,
+  TypeFromPropDescriptors,
+  TypeIdentifier,
 }

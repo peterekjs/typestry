@@ -1,35 +1,35 @@
-import type { TypeIdentity } from '../definitions'
+import type { TypeIdentifier } from '../definitions'
 import { describeType } from '../describe'
-import { defineIdentity } from '../identity'
+import { createIdentifier } from '../identifier'
 
 import { $number } from './basics'
 
-const $NaN: TypeIdentity<typeof NaN> = defineIdentity(
+const $NaN: TypeIdentifier<typeof NaN> = createIdentifier(
   describeType('NaN', (v: unknown): v is typeof NaN => $number.is(v) && isNaN(v))
 )
 
 // #region Finite Number
-const $finiteNumber: TypeIdentity<number> = defineIdentity(
+const $finiteNumber: TypeIdentifier<number> = createIdentifier(
   describeType('finite number', (v): v is number => $number.is(v) && Number.isFinite(v))
 )
 
-const $safeInteger: TypeIdentity<number> = defineIdentity(
+const $safeInteger: TypeIdentifier<number> = createIdentifier(
   describeType('safe integer', (v): v is number => Number.isSafeInteger(v))
 )
 
-const $positiveNumber: TypeIdentity<number> = defineIdentity(
+const $positiveNumber: TypeIdentifier<number> = createIdentifier(
   describeType('positive number', (v): v is number => $number.is(v) && v > 0)
 )
-const $positiveNumberOrZero: TypeIdentity<number> = defineIdentity(
+const $positiveNumberOrZero: TypeIdentifier<number> = createIdentifier(
   describeType('positive number or zero', (v): v is number => $number.is(v) && v >= 0)
 )
-const $negativeNumber: TypeIdentity<number> = defineIdentity(
+const $negativeNumber: TypeIdentifier<number> = createIdentifier(
   describeType('negative number', (v): v is number => $number.is(v) && v < 0)
 )
-const $negativeNumberOrZero: TypeIdentity<number> = defineIdentity(
+const $negativeNumberOrZero: TypeIdentifier<number> = createIdentifier(
   describeType('negative number or zero', (v): v is number => $number.is(v) && v <= 0)
 )
-const $zero: TypeIdentity<number> = defineIdentity(describeType('zero', (v): v is number => v === 0))
+const $zero: TypeIdentifier<number> = createIdentifier(describeType('zero', (v): v is number => v === 0))
 
 export {
   $finiteNumber,

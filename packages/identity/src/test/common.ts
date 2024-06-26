@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { TypeIdentity } from '../definitions'
+import { TypeIdentifier } from '../definitions'
 
 const TEST_VALUES = {
   'empty string': '',
@@ -80,10 +80,10 @@ function* drop(keys: Iterable<TestKey>): Generator<[TestKey, unknown]> {
 
 function testIdentity(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  identity: TypeIdentity<any>,
+  identity: TypeIdentifier<any>,
   positiveResultingEntries: Iterable<[TestKey, unknown]>
 ) {
-  describe(identity.description.name, () => {
+  describe(identity.descriptor.name, () => {
     const positive = new Map(positiveResultingEntries)
 
     for (const [key, value] of positive) {

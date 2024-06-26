@@ -1,14 +1,14 @@
-import type { TypeDescription } from './definitions'
+import type { TypeDescriptor } from './definitions'
 
-function* mergeProps<T extends TypeDescription<any>[]>(descriptions: T) {
+function* mergeProps<T extends TypeDescriptor<any>[]>(descriptions: T) {
   for (const { props } of descriptions) {
     yield* props
   }
 }
 
-function mergeTypes<T extends TypeDescription<any>[]>(
+function mergeDescriptors<T extends TypeDescriptor<any>[]>(
   ...descriptions: T
-): T[number] extends TypeDescription<infer S> ? TypeDescription<S> : never {
+): T[number] extends TypeDescriptor<infer S> ? TypeDescriptor<S> : never {
   function validate(input: unknown) {
     return descriptions.some((x) => x.validate(input))
   }
@@ -25,7 +25,7 @@ function mergeTypes<T extends TypeDescription<any>[]>(
     get props() {
       return new Set(mergeProps(descriptions))
     },
-  } as T[number] extends TypeDescription<infer S> ? TypeDescription<S> : never
+  } as T[number] extends TypeDescriptor<infer S> ? TypeDescriptor<S> : never
 }
 
-export { mergeTypes }
+export { mergeDescriptors }

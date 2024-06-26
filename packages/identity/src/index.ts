@@ -1,16 +1,16 @@
 export type {
   Assert,
-  PropDescriptions,
-  TypeDescription,
-  TypeFromDescription,
-  TypeFromDescriptions,
+  PropDescriptors,
+  TypeDescriptor,
+  TypeFromDescriptor,
+  TypeFromDescriptors,
   TypeFromIdentity,
-  TypeFromPropDescriptions,
-  TypeIdentity,
+  TypeFromPropDescriptors,
+  TypeIdentifier,
 } from './definitions'
 export * from './errors'
 export { describeArray, describeInstance, describeObject, describeType } from './describe'
-export { defineIdentity } from './identity'
-export { mergeTypes } from './merge'
+export { createIdentifier } from './identifier'
+export { mergeDescriptors } from './merge'
 
 export * from './lib'

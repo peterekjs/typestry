@@ -1,31 +1,31 @@
-import type { TypeIdentity } from '../definitions'
+import type { TypeIdentifier } from '../definitions'
 import { describeInstance, describeType } from '../describe'
-import { defineIdentity } from '../identity'
+import { createIdentifier } from '../identifier'
 import { $assignable } from './basics'
 
-const $Map: TypeIdentity<Map<any, any>> = defineIdentity(describeInstance(Map))
-const $Set: TypeIdentity<Set<any>> = defineIdentity(describeInstance(Set))
-const $WeakMap: TypeIdentity<WeakMap<any, any>> = defineIdentity(describeInstance(WeakMap))
-const $WeakSet: TypeIdentity<WeakSet<any>> = defineIdentity(describeInstance(WeakSet))
+const $Map: TypeIdentifier<Map<any, any>> = createIdentifier(describeInstance(Map))
+const $Set: TypeIdentifier<Set<any>> = createIdentifier(describeInstance(Set))
+const $WeakMap: TypeIdentifier<WeakMap<any, any>> = createIdentifier(describeInstance(WeakMap))
+const $WeakSet: TypeIdentifier<WeakSet<any>> = createIdentifier(describeInstance(WeakSet))
 
-const $Date: TypeIdentity<Date> = defineIdentity(describeInstance(Date))
-const $validDate: TypeIdentity<Date> = defineIdentity(
+const $Date: TypeIdentifier<Date> = createIdentifier(describeInstance(Date))
+const $validDate: TypeIdentifier<Date> = createIdentifier(
   describeType('valid Date', (v): v is Date => $Date.is(v) && !isNaN(v.getTime()))
 )
 
-const $Error: TypeIdentity<Error> = defineIdentity(describeInstance(Error))
+const $Error: TypeIdentifier<Error> = createIdentifier(describeInstance(Error))
 
-const $Iterable: TypeIdentity<Iterable<unknown>> = defineIdentity(
+const $Iterable: TypeIdentifier<Iterable<unknown>> = createIdentifier(
   describeType('Iterable', (v): v is Iterable<unknown> => $assignable.is(v) && Symbol.iterator in v)
 )
-const $AsyncIterable: TypeIdentity<AsyncIterable<unknown>> = defineIdentity(
+const $AsyncIterable: TypeIdentifier<AsyncIterable<unknown>> = createIdentifier(
   describeType('AsyncIterable', (v): v is AsyncIterable<unknown> => $assignable.is(v) && Symbol.asyncIterator in v)
 )
 
-const $Disposable: TypeIdentity<Disposable> = defineIdentity(
+const $Disposable: TypeIdentifier<Disposable> = createIdentifier(
   describeType('Disposable', (v): v is Disposable => $assignable.is(v) && Symbol.dispose in v)
 )
-const $AsyncDisposable: TypeIdentity<AsyncDisposable> = defineIdentity(
+const $AsyncDisposable: TypeIdentifier<AsyncDisposable> = createIdentifier(
   describeType('AsyncDisposable', (v): v is AsyncDisposable => $assignable.is(v) && Symbol.asyncDispose in v)
 )
 
