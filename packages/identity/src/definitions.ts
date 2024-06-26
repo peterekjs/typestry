@@ -28,10 +28,15 @@ type TypeFromDescriptors<T extends TypeDescriptor<any>[]> = T[number] extends Ty
 type TypeFromIdentity<T extends TypeIdentifier<unknown>> = T extends TypeIdentifier<infer S> ? S : never
 type TypeFromPropDescriptors<T extends PropDescriptors<unknown>> = T extends PropDescriptors<infer S> ? S : never
 
+type MergedDescriptor<T extends TypeDescriptor<any>[]> = T[number] extends TypeDescriptor<infer S> ? TypeDescriptor<S> : never
+type MergedIdentifier<T extends TypeIdentifier<any>[]> = T[number] extends TypeIdentifier<infer S> ? TypeIdentifier<S> : never
+
 export type {
   Assert,
   Assignable,
   Defined,
+  MergedDescriptor,
+  MergedIdentifier,
   ObjectLike,
   Primitive,
   PropDescriptors,

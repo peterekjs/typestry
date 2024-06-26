@@ -2,7 +2,7 @@ import type { AnyFunction, Primitive } from 'ts-essentials'
 import type { Assignable, Defined, ObjectLike, TypeIdentifier } from '../definitions'
 import { describeType } from '../describe'
 import { createIdentifier } from '../identifier'
-import { mergeDescriptors } from '../merge'
+import { mergeIdentifiers } from '../merge'
 
 const $bigint: TypeIdentifier<bigint> = createIdentifier(describeType('bigint', (v): v is bigint => typeof v === 'bigint'))
 const $boolean: TypeIdentifier<boolean> = createIdentifier(describeType('boolean', (v): v is boolean => typeof v === 'boolean'))
@@ -25,10 +25,10 @@ const $defined: TypeIdentifier<Defined<unknown>> = createIdentifier(
 // Not exactly primitives, but are widely used as these contain basic characteristics
 const $any: TypeIdentifier<any> = createIdentifier(describeType('any', (v): v is any => true))
 const $null: TypeIdentifier<null> = createIdentifier(describeType('null', (v): v is null => v === null))
-const $nil: TypeIdentifier<null | undefined> = createIdentifier(mergeDescriptors($null.descriptor, $undefined.descriptor))
+const $nil: TypeIdentifier<null | undefined> = mergeIdentifiers($null, $undefined)
 const $array: TypeIdentifier<any[]> = createIdentifier(describeType('any[]', Array.isArray))
 
-const $assignable: TypeIdentifier<Assignable> = createIdentifier(mergeDescriptors($object.descriptor, $function.descriptor))
+const $assignable: TypeIdentifier<Assignable> = mergeIdentifiers($object, $function)
 
 const $primitive: TypeIdentifier<Primitive> = createIdentifier(
   describeType('primitive', (v): v is Primitive => Object(v) !== v)

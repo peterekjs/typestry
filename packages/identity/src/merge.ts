@@ -1,4 +1,5 @@
-import type { TypeDescriptor } from './definitions'
+import type { MergedDescriptor, MergedIdentifier, TypeDescriptor, TypeIdentifier } from './definitions'
+import { createIdentifier } from './identifier'
 
 function* mergeProps<T extends TypeDescriptor<any>[]>(descriptions: T) {
   for (const { props } of descriptions) {
@@ -6,9 +7,7 @@ function* mergeProps<T extends TypeDescriptor<any>[]>(descriptions: T) {
   }
 }
 
-function mergeDescriptors<T extends TypeDescriptor<any>[]>(
-  ...descriptions: T
-): T[number] extends TypeDescriptor<infer S> ? TypeDescriptor<S> : never {
+function mergeDescriptors<T extends TypeDescriptor<any>[]>(...descriptions: T): MergedDescriptor<T> {
   function validate(input: unknown) {
     return descriptions.some((x) => x.validate(input))
   }
@@ -25,7 +24,11 @@ function mergeDescriptors<T extends TypeDescriptor<any>[]>(
     get props() {
       return new Set(mergeProps(descriptions))
     },
-  } as T[number] extends TypeDescriptor<infer S> ? TypeDescriptor<S> : never
+  } as MergedDescriptor<T>
 }
 
-export { mergeDescriptors }
+function mergeIdentifiers<T extends TypeIdentifier<any>[]>(...identifiers: T): MergedIdentifier<T> {
+  return createIdentifier(mergeDescriptors(...identifiers.map((x) => x.descriptor)) as any) as MergedIdentifier<T>
+}
+
+export { mergeDescriptors, mergeIdentifiers }
