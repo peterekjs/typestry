@@ -1,12 +1,12 @@
 import { describe, expect, test } from 'vitest'
 
-import { describeArray, describeInstance, describeObject, describeType } from './describe'
+import { describeArray, describeInstance, describePrimitive, describeRecord } from './describe'
 
 const validateBoolean = (v: unknown): v is boolean => typeof v === 'boolean'
 
 describe('describe', () => {
   test('describeType', () => {
-    const booleanType = describeType('boolean', validateBoolean)
+    const booleanType = describePrimitive('boolean', validateBoolean)
 
     expect(booleanType.name).to.be.eq('boolean')
     expect(booleanType.validate).to.be.eq(validateBoolean)
@@ -14,8 +14,8 @@ describe('describe', () => {
     expect(booleanType.validate(0)).to.be.false
     expect(booleanType.equals(true, true)).to.be.true
     expect(booleanType.equals(true, false)).to.be.false
-    expect(booleanType.isObject).to.be.false
-    expect(booleanType.props).to.be.empty
+    expect(booleanType.primitive).to.be.true
+    expect(booleanType.props).to.be.eq(null)
   })
 
   test('describeInstance', () => {
@@ -35,16 +35,12 @@ describe('describe', () => {
     fooInstance.bar = 2
     expect(FooType.equals(fooInstance, new Foo())).to.be.false
 
-    expect(FooType.isObject).to.be.true
+    expect(FooType.primitive).to.be.false
     expect(FooType.props).to.be.eql(new Set(['bar']))
-
-    const BadFooType = describeInstance(Foo, () => null)
-    expect(BadFooType.name).to.be.eq('Foo')
-    expect(BadFooType.props).to.be.eql(new Set())
   })
 
   test('describeArray', () => {
-    const booleanType = describeType('boolean', validateBoolean)
+    const booleanType = describePrimitive('boolean', validateBoolean)
     const arrayType = describeArray(booleanType)
 
     expect(arrayType.name).to.be.eq('boolean[]')
@@ -52,13 +48,13 @@ describe('describe', () => {
     expect(arrayType.validate([true, false, false, true])).to.be.true
     expect(arrayType.validate([true, false, 0, 1])).to.be.false
     expect(arrayType.equals([true, false], [true, false])).to.be.true
-    expect(arrayType.isObject).to.be.false
-    expect(arrayType.props).to.be.eql(new Set())
+    expect(arrayType.primitive).to.be.false
+    expect(arrayType.props).to.be.eq(null)
   })
 
   test('describeObject', () => {
-    const objectType = describeObject('foo', {
-      bar: describeType('boolean', validateBoolean),
+    const objectType = describeRecord('foo', {
+      bar: describePrimitive('boolean', validateBoolean),
     })
 
     expect(objectType.name).to.be.eq('foo')
@@ -68,7 +64,7 @@ describe('describe', () => {
     expect(objectType.validate({ bar: 0 })).to.be.false
     expect(objectType.equals({ bar: true }, { bar: true })).to.be.true
     expect(objectType.equals({ bar: true }, { bar: false })).to.be.false
-    expect(objectType.isObject).to.be.true
+    expect(objectType.primitive).to.be.false
     expect(objectType.props).to.eql(new Set(['bar']))
   })
 })

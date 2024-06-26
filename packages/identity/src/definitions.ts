@@ -5,12 +5,12 @@ type AnyRecord = Record<string | number | symbol, unknown>
 type Assignable = AnyRecord | AnyFunction
 type ExtendedTypeOf = Primitive | 'null' | 'class' | 'function' | string
 
-type TypeDescriptor<T, P = T extends object ? keyof T : never> = {
+type TypeDescriptor<T> = {
   name: string
   validate: (input: unknown) => input is T
   equals(a: T, b: T): boolean
-  readonly isObject: boolean
-  readonly props: Set<P>
+  readonly primitive: boolean
+  readonly props: (T extends object ? Set<keyof T> : null) | null
 }
 
 type TypeIdentifier<T> = {
@@ -27,7 +27,7 @@ type TypeFromDescriptors<T extends TypeDescriptor<any>[]> = T[number] extends Ty
 type TypeFromIdentity<T extends TypeIdentifier<unknown>> = T extends TypeIdentifier<infer S> ? S : never
 type TypeFromPropDescriptors<T extends PropDescriptors<unknown>> = T extends PropDescriptors<infer S> ? S : never
 
-type MergedDescriptor<T extends TypeDescriptor<any>[]> = T[number] extends TypeDescriptor<infer S> ? TypeDescriptor<S> : never
+type MergedDescriptor<T extends TypeDescriptor<any>[]> = TypeDescriptor<TypeFromDescriptor<T[number]>>
 type MergedIdentifier<T extends TypeIdentifier<any>[]> = T[number] extends TypeIdentifier<infer S> ? TypeIdentifier<S> : never
 
 export type {

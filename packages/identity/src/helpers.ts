@@ -8,7 +8,7 @@ function assert(condition: unknown, message: string): asserts condition {
   }
 }
 
-function isObject<T extends Record<string | number | symbol, unknown>>(input: unknown): input is T {
+function isObject<T extends NonNullable<unknown>>(input: unknown): input is T {
   return typeof input === 'object' && input !== null
 }
 

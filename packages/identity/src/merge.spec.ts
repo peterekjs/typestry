@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { describeType } from './describe'
+import { describePrimitive } from './describe'
 import { mergeDescriptors } from './merge'
 
 const validateBoolean = (v: unknown): v is boolean => typeof v === 'boolean'
@@ -7,8 +7,8 @@ const validateNumber = (v: unknown): v is number => typeof v === 'number'
 
 describe('merge', () => {
   test('mergeDescriptors', () => {
-    const booleanType = describeType('boolean', validateBoolean)
-    const numberType = describeType('number', validateNumber)
+    const booleanType = describePrimitive('boolean', validateBoolean)
+    const numberType = describePrimitive('number', validateNumber)
 
     const booleanOrNumberType = mergeDescriptors(booleanType, numberType)
 
@@ -20,8 +20,10 @@ describe('merge', () => {
     expect(booleanOrNumberType.validate('')).to.be.false
     expect(booleanOrNumberType.validate(null)).to.be.false
     expect(booleanOrNumberType.equals(1, 1)).to.be.true
+    expect(booleanOrNumberType.equals(1, 1)).to.be.true
     expect(booleanOrNumberType.equals(1, true)).to.be.false
-    expect(booleanOrNumberType.isObject).to.be.false
-    expect(booleanOrNumberType.props).to.be.eql(new Set())
+    expect(() => booleanOrNumberType.equals(1, 'foo' as any)).to.throw('Equality check for type boolean | number failed')
+    expect(booleanOrNumberType.primitive).to.be.true
+    expect(booleanOrNumberType.props).to.be.eq(null)
   })
 })
