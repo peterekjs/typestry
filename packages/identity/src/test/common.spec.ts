@@ -13,4 +13,8 @@ describe('test/common', () => {
 
     expect([...drop(PRIMITIVE_KEYS)].length).to.be.eq(expectedLength)
   })
+
+  test('values', () => {
+    expect(TEST_VALUES['function (throws exception)']).to.throw()
+  })
 })

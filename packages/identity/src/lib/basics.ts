@@ -1,8 +1,9 @@
 import type { AnyFunction, Primitive } from 'ts-essentials'
-import type { Assignable, Defined, ObjectLike, TypeIdentifier } from '../definitions'
+import type { AnyRecord, Assignable, Defined, TypeIdentifier } from '../definitions'
 import { describeType } from '../describe'
 import { createIdentifier } from '../identifier'
 import { mergeIdentifiers } from '../merge'
+import { isObject, isPrimitive } from '../helpers'
 
 const $bigint: TypeIdentifier<bigint> = createIdentifier(describeType('bigint', (v): v is bigint => typeof v === 'bigint'))
 const $boolean: TypeIdentifier<boolean> = createIdentifier(describeType('boolean', (v): v is boolean => typeof v === 'boolean'))
@@ -10,9 +11,7 @@ const $function: TypeIdentifier<AnyFunction> = createIdentifier(
   describeType('function', (v): v is AnyFunction => typeof v === 'function')
 )
 const $number: TypeIdentifier<number> = createIdentifier(describeType('number', (v): v is number => typeof v === 'number'))
-const $object: TypeIdentifier<ObjectLike> = createIdentifier(
-  describeType('object', (v): v is ObjectLike => typeof v === 'object' && !!v)
-)
+const $object: TypeIdentifier<AnyRecord> = createIdentifier(describeType('object', isObject))
 const $string: TypeIdentifier<string> = createIdentifier(describeType('string', (v): v is string => typeof v === 'string'))
 const $symbol: TypeIdentifier<symbol> = createIdentifier(describeType('symbol', (v): v is symbol => typeof v === 'symbol'))
 const $undefined: TypeIdentifier<undefined> = createIdentifier(
@@ -29,10 +28,7 @@ const $nil: TypeIdentifier<null | undefined> = mergeIdentifiers($null, $undefine
 const $array: TypeIdentifier<any[]> = createIdentifier(describeType('any[]', Array.isArray))
 
 const $assignable: TypeIdentifier<Assignable> = mergeIdentifiers($object, $function)
-
-const $primitive: TypeIdentifier<Primitive> = createIdentifier(
-  describeType('primitive', (v): v is Primitive => Object(v) !== v)
-)
+const $primitive: TypeIdentifier<Primitive> = createIdentifier(describeType('primitive', isPrimitive))
 
 export {
   $array,

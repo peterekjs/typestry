@@ -1,10 +1,9 @@
 import type { AnyFunction, Primitive } from 'ts-essentials'
 
 type Defined<T> = T extends undefined ? never : T
-type ObjectLike = NonNullable<unknown> & object
-type Assignable = ObjectLike | AnyFunction
-
-type Assert = (condition: unknown, message?: string) => asserts condition
+type AnyRecord = Record<string | number | symbol, unknown>
+type Assignable = AnyRecord | AnyFunction
+type ExtendedTypeOf = Primitive | 'null' | 'class' | 'function' | string
 
 type TypeDescriptor<T, P = T extends object ? keyof T : never> = {
   name: string
@@ -32,12 +31,12 @@ type MergedDescriptor<T extends TypeDescriptor<any>[]> = T[number] extends TypeD
 type MergedIdentifier<T extends TypeIdentifier<any>[]> = T[number] extends TypeIdentifier<infer S> ? TypeIdentifier<S> : never
 
 export type {
-  Assert,
+  AnyRecord,
   Assignable,
   Defined,
+  ExtendedTypeOf,
   MergedDescriptor,
   MergedIdentifier,
-  ObjectLike,
   Primitive,
   PropDescriptors,
   TypeDescriptor,

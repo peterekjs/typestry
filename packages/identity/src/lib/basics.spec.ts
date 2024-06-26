@@ -19,7 +19,20 @@ import {
 
 testIdentity($bigint, pick(['bigint']))
 testIdentity($boolean, pick(['boolean (false)', 'boolean (true)']))
-testIdentity($function, pick(['function', 'function (throws exception)', 'lambda', 'lambda (returns value)']))
+testIdentity(
+  $function,
+  pick([
+    'function',
+    'function (throws exception)',
+    'function (named)',
+    'async function',
+    'lambda',
+    'lambda (returns value)',
+    'generator',
+    'async generator',
+    'class',
+  ])
+)
 testIdentity(
   $number,
   pick([

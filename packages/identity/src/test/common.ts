@@ -24,8 +24,13 @@ const TEST_VALUES = {
   'function (throws exception)': function () {
     throw new Error()
   },
+  'function (named)': function foo() {},
+  'async function': async function foo() {},
   'lambda': () => {},
   'lambda (returns value)': () => 0,
+  'generator': function* foo() {},
+  'async generator': async function* foo() {},
+  'class': class Foo {},
   'empty object': {},
   'non-empty object': { foo: 'bar' },
   'iterable': { *[Symbol.iterator]() {} },
