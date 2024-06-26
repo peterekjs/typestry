@@ -36,11 +36,11 @@ describe('describe', () => {
     expect(FooType.equals(fooInstance, new Foo())).to.be.false
 
     expect(FooType.isObject).to.be.true
-    expect(FooType.props).to.be.eql(['bar'])
+    expect(FooType.props).to.be.eql(new Set(['bar']))
 
     const BadFooType = describeInstance(Foo, () => null)
     expect(BadFooType.name).to.be.eq('Foo')
-    expect(BadFooType.props).to.be.eql([])
+    expect(BadFooType.props).to.be.eql(new Set())
   })
 
   test('describeArray', () => {
@@ -53,7 +53,7 @@ describe('describe', () => {
     expect(arrayType.validate([true, false, 0, 1])).to.be.false
     expect(arrayType.equals([true, false], [true, false])).to.be.true
     expect(arrayType.isObject).to.be.false
-    expect(arrayType.props).to.be.empty
+    expect(arrayType.props).to.be.eql(new Set())
   })
 
   test('describeObject', () => {
@@ -69,6 +69,6 @@ describe('describe', () => {
     expect(objectType.equals({ bar: true }, { bar: true })).to.be.true
     expect(objectType.equals({ bar: true }, { bar: false })).to.be.false
     expect(objectType.isObject).to.be.true
-    expect(objectType.props).to.eql(['bar'])
+    expect(objectType.props).to.eql(new Set(['bar']))
   })
 })

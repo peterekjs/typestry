@@ -1,5 +1,11 @@
 import type { TypeDescription } from './definitions'
 
+function* mergeProps<T extends TypeDescription<any>[]>(descriptions: T) {
+  for (const { props } of descriptions) {
+    yield* props
+  }
+}
+
 function mergeTypes<T extends TypeDescription<any>[]>(
   ...descriptions: T
 ): T[number] extends TypeDescription<infer S> ? TypeDescription<S> : never {
@@ -17,7 +23,7 @@ function mergeTypes<T extends TypeDescription<any>[]>(
       return descriptions.some((x) => x.isObject)
     },
     get props() {
-      return descriptions.map((x) => x.props).flat()
+      return new Set(mergeProps(descriptions))
     },
   } as T[number] extends TypeDescription<infer S> ? TypeDescription<S> : never
 }

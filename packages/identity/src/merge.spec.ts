@@ -22,6 +22,6 @@ describe('merge', () => {
     expect(booleanOrNumberType.equals(1, 1)).to.be.true
     expect(booleanOrNumberType.equals(1, true)).to.be.false
     expect(booleanOrNumberType.isObject).to.be.false
-    expect(booleanOrNumberType.props).to.be.eql([])
+    expect(booleanOrNumberType.props).to.be.eql(new Set())
   })
 })

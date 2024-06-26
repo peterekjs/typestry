@@ -4,7 +4,9 @@ import { assert, isObject } from './helpers'
 function describeType<T>(
   name: string,
   validate: (input: unknown) => input is T,
-  props: T extends NonNullable<unknown> ? (keyof T)[] : never[] = [] as T extends NonNullable<unknown> ? (keyof T)[] : never[]
+  props: T extends NonNullable<unknown> ? Set<keyof T> : Set<never> = new Set() as T extends NonNullable<unknown>
+    ? Set<keyof T>
+    : Set<never>
 ): TypeDescription<T> {
   return {
     name,
@@ -13,16 +15,16 @@ function describeType<T>(
       return validate(a) && validate(b) && a === b
     },
     get isObject() {
-      return !!props.length
+      return !!props.size // TODO: Think of better way
     },
     get props() {
-      return [...props] as any[]
+      return new Set(props) as Set<any>
     },
   }
 }
 
 function describeInstance<T>(Ctor: new () => T, instantiator: () => T = () => new Ctor()): TypeDescription<T> {
-  const props = Object.keys(instantiator() ?? Object.getOwnPropertyDescriptors(Ctor).prototype.value) as (keyof T)[]
+  const props = new Set(Object.keys(instantiator() ?? Object.getOwnPropertyDescriptors(Ctor).prototype.value) as (keyof T)[])
 
   function validate(input: unknown): input is T {
     return input instanceof Ctor
@@ -32,13 +34,13 @@ function describeInstance<T>(Ctor: new () => T, instantiator: () => T = () => ne
     name: Ctor.name,
     validate,
     equals(a, b) {
-      return validate(a) && validate(b) && props.every((p) => a[p] === b[p])
+      return validate(a) && validate(b) && [...props].every((p) => a[p] === b[p])
     },
     get isObject() {
       return true
     },
     get props() {
-      return [...props] as any[]
+      return new Set<any>(props)
     },
   }
 }
@@ -60,7 +62,7 @@ function describeArray<T extends TypeDescription<any>>(
       return false
     },
     get props() {
-      return [] as any[]
+      return new Set()
     },
   } as T extends TypeDescription<infer S> ? TypeDescription<S[]> : never
 }
@@ -75,7 +77,7 @@ function describeObject<P extends PropDescriptions<NonNullable<unknown>>>(
 
   type T = TypeFromPropDescriptions<P>
 
-  const props = Object.keys(propDescriptions) as (T extends NonNullable<unknown> ? keyof T : never)[]
+  const props = new Set(Object.keys(propDescriptions) as (T extends NonNullable<unknown> ? keyof T : never)[])
   const getPropEntries = () => Object.entries(propDescriptions) as [keyof T, TypeDescription<T[keyof T]>][]
 
   function validate(input: unknown): input is T {
@@ -94,7 +96,7 @@ function describeObject<P extends PropDescriptions<NonNullable<unknown>>>(
       return true
     },
     get props() {
-      return [...props] as any[]
+      return new Set<any>(props)
     },
   }
 }

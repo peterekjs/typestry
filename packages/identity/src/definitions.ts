@@ -11,7 +11,7 @@ type TypeDescription<T, P = T extends object ? keyof T : never> = {
   validate: (input: unknown) => input is T
   equals(a: T, b: T): boolean
   readonly isObject: boolean
-  readonly props: P[]
+  readonly props: Set<P>
 }
 
 type TypeIdentity<T> = {
