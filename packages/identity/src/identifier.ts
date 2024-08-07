@@ -1,4 +1,4 @@
-import type { TypeDescriptor, TypeIdentifier } from './definitions'
+import { SYMBOL_DESCRIPTOR, type TypeDescriptor, type TypeIdentifier } from './definitions'
 import { TypeAssertionError } from './errors'
 
 function createIdentifier<T>(descriptor: TypeDescriptor<T>): TypeIdentifier<T> {
@@ -16,10 +16,14 @@ function createIdentifier<T>(descriptor: TypeDescriptor<T>): TypeIdentifier<T> {
   }
 
   return {
+    get name() {
+      return descriptor.name
+    },
     is,
     assert,
     ensure,
-    descriptor,
+    equals: descriptor.equals,
+    [SYMBOL_DESCRIPTOR]: descriptor,
   }
 }
 

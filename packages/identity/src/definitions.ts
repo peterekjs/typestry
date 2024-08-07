@@ -1,5 +1,7 @@
 import type { AnyFunction, Primitive } from 'ts-essentials'
 
+const SYMBOL_DESCRIPTOR = Symbol('identity.descriptor')
+
 type Defined<T> = T extends undefined ? never : T
 type AnyRecord = Record<string | number | symbol, unknown>
 type Assignable = AnyRecord | AnyFunction
@@ -14,10 +16,12 @@ type TypeDescriptor<T> = {
 }
 
 type TypeIdentifier<T> = {
+  readonly name: string
   is(input: unknown): input is T
   assert(input: unknown): asserts input is T
   ensure(input: unknown): T
-  descriptor: TypeDescriptor<T>
+  equals: TypeDescriptor<T>['equals']
+  [SYMBOL_DESCRIPTOR]: TypeDescriptor<T>
 }
 
 type PropDescriptors<T> = { [K in keyof T]: TypeDescriptor<T[K]> }
@@ -30,6 +34,7 @@ type TypeFromPropDescriptors<T extends PropDescriptors<unknown>> = T extends Pro
 type MergedDescriptor<T extends TypeDescriptor<any>[]> = TypeDescriptor<TypeFromDescriptor<T[number]>>
 type MergedIdentifier<T extends TypeIdentifier<any>[]> = T[number] extends TypeIdentifier<infer S> ? TypeIdentifier<S> : never
 
+export { SYMBOL_DESCRIPTOR }
 export type {
   AnyRecord,
   Assignable,

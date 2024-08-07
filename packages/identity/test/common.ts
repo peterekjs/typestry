@@ -88,7 +88,7 @@ function testIdentity(
   identity: TypeIdentifier<any>,
   positiveResultingEntries: Iterable<[TestKey, unknown]>
 ) {
-  describe(identity.descriptor.name, () => {
+  describe(identity.name, () => {
     const positive = new Map(positiveResultingEntries)
 
     for (const [key, value] of positive) {

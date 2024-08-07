@@ -1,3 +1,4 @@
+import { SYMBOL_DESCRIPTOR } from './definitions'
 import type { MergedDescriptor, MergedIdentifier, TypeDescriptor, TypeIdentifier } from './definitions'
 import { createIdentifier } from './identifier'
 
@@ -9,10 +10,10 @@ function* mergeProps<T extends TypeDescriptor<any>[]>(descriptions: T) {
 
 function* collectDescriptors(identifiers: Iterable<TypeIdentifier<any>>) {
   for (const identifier of identifiers) {
-    if (!identifier?.descriptor) {
+    if (!identifier?.[SYMBOL_DESCRIPTOR]) {
       throw new ReferenceError('TypeDescriptor does not exist', { cause: identifiers })
     }
-    yield identifier.descriptor
+    yield identifier[SYMBOL_DESCRIPTOR]
   }
 }
 
