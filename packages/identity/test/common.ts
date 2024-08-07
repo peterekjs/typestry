@@ -84,7 +84,6 @@ function* drop(keys: Iterable<TestKey>): Generator<[TestKey, unknown]> {
 }
 
 function testIdentity(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   identity: TypeIdentifier<any>,
   positiveResultingEntries: Iterable<[TestKey, unknown]>
 ) {
