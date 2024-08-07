@@ -1,11 +1,28 @@
 import { describe, expect, test } from 'vitest'
 
-import { describeArray, describeInstance, describePrimitive, describeRecord } from './describe'
+import { describeArray, describeInstance, describePrimitive, describeRecord, describeType } from './describe'
 
 const validateBoolean = (v: unknown): v is boolean => typeof v === 'boolean'
 
 describe('describe', () => {
   test('describeType', () => {
+    type Foo = { foo: number }
+    const someType = describeType<Foo>({
+      name: 'someType',
+      validate: (x: any): x is Foo => typeof x?.foo === 'number',
+      props: ['foo']
+    })
+
+    expect(someType.name).to.eq('someType')
+    expect(someType.validate({ foo: 1 })).to.be.true
+    expect(someType.equals({ foo: 1 }, { foo: 1 })).to.be.true
+    expect(someType.equals({ foo: 1 }, { foo: 2 })).to.be.false
+    expect(() => someType.equals({ foo: 1 }, 2 as any)).to.throw()
+    expect(someType.props).to.eql(new Set(['foo']))
+    expect(someType.primitive).to.be.false
+  })
+
+  test('describePrimitive', () => {
     const booleanType = describePrimitive('boolean', validateBoolean)
 
     expect(booleanType.name).to.be.eq('boolean')
@@ -52,19 +69,34 @@ describe('describe', () => {
     expect(arrayType.props).to.be.eq(null)
   })
 
-  test('describeObject', () => {
-    const objectType = describeRecord('foo', {
+  test('describeRecord', () => {
+    const foo = describeRecord('foo', {
       bar: describePrimitive('boolean', validateBoolean),
     })
 
-    expect(objectType.name).to.be.eq('foo')
-    expect(objectType.validate({})).to.be.false
-    expect(objectType.validate({ bar: true })).to.be.true
-    expect(objectType.validate({ bar: true, baz: 0 })).to.be.true
-    expect(objectType.validate({ bar: 0 })).to.be.false
-    expect(objectType.equals({ bar: true }, { bar: true })).to.be.true
-    expect(objectType.equals({ bar: true }, { bar: false })).to.be.false
-    expect(objectType.primitive).to.be.false
-    expect(objectType.props).to.eql(new Set(['bar']))
+    expect(() => describeRecord('fail', true)).to.throw()
+    expect(foo.name).to.be.eq('foo')
+    expect(foo.validate({})).to.be.false
+    expect(foo.validate({ bar: true })).to.be.true
+    expect(foo.validate({ bar: true, baz: 0 })).to.be.true
+    expect(foo.validate({ bar: 0 })).to.be.false
+    expect(foo.equals({ bar: true }, { bar: true })).to.be.true
+    expect(foo.equals({ bar: true }, { bar: false })).to.be.false
+    expect(foo.equals({ bar: true }, { bar: true, zed: false } as any)).to.be.true // Checking only properties that matted
+    expect(() => foo.equals({ bar: true }, { zed: false } as any)).to.throw()
+    expect(foo.primitive).to.be.false
+    expect(foo.props).to.eql(new Set(['bar']))
+
+    const bar = describeRecord('bar', {
+      a: describePrimitive('boolean', validateBoolean),
+      b: describePrimitive('boolean', validateBoolean)
+    })
+
+    expect(bar.validate({ a: true, b: true })).to.be.true
+    expect(bar.equals({ a: true, b: true }, { a: true, b: true })).to.be.true
+    expect(bar.equals({ a: false, b: true }, { a: true, b: true })).to.be.false
+    expect(bar.equals({ a: true, b: true }, { a: true, b: false })).to.be.false
+    expect(() => bar.equals({ a: 0, b: true } as any, { a: true, b: false })).to.throw()
+    expect(() => bar.equals({ a: true, b: true }, { a: true, b: 0 } as any)).to.throw()
   })
 })

@@ -158,24 +158,30 @@ function describeRecord<P extends PropDescriptors<NonNullable<unknown>>, T = Typ
   function equals(a: T, b: T) {
     assertInputsAsObjects(a, b)
 
-    const propError = (key: keyof T, typeName: string, which: string) =>
-      new TypeError(
-        `Property '${name}.${String(key)}' validation failed for ${which} argument. Expected type of ${typeName}.`,
-        { cause: { a, b } }
-      )
+    const results = new Set(validateProps(a, b))
+    return results.size === 1 && results.has(true)
+  }
 
+  function* validateProps(a: T, b: T) {
     for (const [key, descriptor] of getPropEntries()) {
+      const propError = preparePropError(key, descriptor.name, { a, b })
+
       if (!descriptor.validate(a[key])) {
-        throw propError(key, descriptor.name, 'first')
+        throw propError('first')
       }
-      if (!descriptor.validate(a[key])) {
-        throw propError(key, descriptor.name, 'second')
+      if (!descriptor.validate(b[key])) {
+        throw propError('second')
       }
 
-      return descriptor.equals(a[key], b[key])
+      yield descriptor.equals(a[key], b[key])
     }
+  }
 
-    return isObject(a) && isObject(b) && getPropEntries().every(([k, v]) => v.equals(a[k], b[k]))
+  function preparePropError(key: keyof T, typeName: string, cause: any) {
+    return (which: string) => new TypeError(
+      `Property '${name}.${String(key)}' validation failed for ${which} argument. Expected type of ${typeName}.`,
+      { cause }
+    )
   }
 
   return {
