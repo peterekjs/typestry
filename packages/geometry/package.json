@@ -1,7 +1,7 @@
 {
-  "name": "@typestry/identity",
-  "version": "0.2.0",
-  "description": "Type identity TypeScript/JavaScript helpers",
+  "name": "@typestry/geometry",
+  "version": "0.0.0",
+  "description": "Geometry helpers",
   "keywords": [
     "typescript",
     "ts",
@@ -31,7 +31,7 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/src/index.d.ts",
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     }
@@ -39,7 +39,7 @@
   "typesVersions": {
     ">=5": {
       "index": [
-        "./dist/src/index.d.ts"
+        "./dist/index.d.ts"
       ]
     }
   },
@@ -48,6 +48,6 @@
     "dev": "vite build --watch"
   },
   "dependencies": {
-    "ts-essentials": "^10.0.0"
+    "@typestry/identity": "^0.2.0"
   }
 }

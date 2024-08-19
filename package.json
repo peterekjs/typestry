@@ -50,6 +50,7 @@
     "eslint": "^9.8.0"
   },
   "workspaces": [
-    "packages/identity"
+    "packages/identity",
+    "packages/geometry"
   ]
 }

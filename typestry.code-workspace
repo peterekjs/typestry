@@ -16,6 +16,10 @@
     {
       "name": "@typestry/identity",
       "path": "packages/identity"
+    },
+    {
+      "name": "@typestry/geometry",
+      "path": "packages/geometry"
     }
   ],
   "settings": {
