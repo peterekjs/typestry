@@ -26,6 +26,21 @@ describe('Point2D', () => {
     expect(a.y).to.eq(b.y)
   })
 
+  test('Point2D.toRange', () => {
+    expect(Point2D.toRange({ x: 0, y: 0 }, { x: 4, y: 2 }, { x: 8, y: 8 }, { x: -6, y: 3 })).to.eql({ min: { x: -6, y: 0 }, max: { x: 8, y: 8 }})
+  })
+
+  test('round', () => {
+    const a = Point2D.fromPoint({ x: 0.5, y: 1 })
+    expect(a.round()).to.eql({ x: 1, y: 1 })
+    expect(a.round(Math.trunc)).to.eql({ x: 0, y: 1 })
+  })
+
+  test('toString', () => {
+    const a = Point2D.fromPoint({ x: 0, y: 1 })
+    expect(String(a)).to.eq('Point2D [x: 0, y: 1]')
+  })
+
   test('iterator', () => {
     const a = new Point2D(0, 0)
     const b = new Point2D(...a)
@@ -59,6 +74,23 @@ describe('Size2D', () => {
     expect(a).not.to.eq(b)
     expect(a.width).to.eq(b.width)
     expect(a.height).to.eq(b.height)
+  })
+
+  test('round', () => {
+    const a = Size2D.fromSize({ width: 0.5, height: 1 })
+    expect(a.round()).to.eql({ width: 1, height: 1 })
+    expect(a.round(Math.trunc)).to.eql({ width: 0, height: 1 })
+  })
+
+  test('transform', () => {
+    const a = Size2D.fromSize({ width: 0.5, height: 1 })
+    const matrix = new TransformMatrix2D().scale(2)
+    expect(a.transform(matrix)).to.eql({ width: 1, height: 2 })
+  })
+
+  test('toString', () => {
+    const a = Size2D.fromSize({ width: 0, height: 1 })
+    expect(String(a)).to.eq('Size2D [width: 0, height: 1]')
   })
 
   test('iterator', () => {
@@ -101,6 +133,17 @@ describe('Rect2D', () => {
     expect(a.y).to.eq(b.y)
     expect(a.width).to.eq(b.width)
     expect(a.height).to.eq(b.height)
+  })
+
+  test('round', () => {
+    const a = Rect2D.fromRect({ width: 0.5, height: 1 })
+    expect(a.round()).to.eql({ x: 0, y: 0, width: 1, height: 1 })
+    expect(a.round(Math.trunc)).to.eql({ x: 0, y: 0, width: 0, height: 1 })
+  })
+
+  test('toString', () => {
+    const a = Rect2D.fromRect({ width: 300, height: 200 })
+    expect(String(a)).to.eq('Rect2D [x: 0, y: 0, width: 300, height: 200]')
   })
 
   test('iterator', () => {
