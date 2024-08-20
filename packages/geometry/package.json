@@ -48,6 +48,6 @@
     "dev": "vite build --watch"
   },
   "dependencies": {
-    "@typestry/identity": "^0.2.0"
+    "@typestry/identity": "^0.3.0"
   }
 }
