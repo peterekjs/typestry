@@ -1,17 +1,59 @@
 import { describe, expect, test } from 'vitest'
 import { describePrimitive, describeObject } from './describe'
-import { mergeDescriptors, mergeIdentifiers } from './merge'
+import { intersectDescriptors, intersectIdentifiers, unionDescriptors, unionIdentifiers } from './merge'
 import { createIdentifier } from './identifier'
+import { $boolean, $number } from './lib'
 
 const validateBoolean = (v: unknown): v is boolean => typeof v === 'boolean'
 const validateNumber = (v: unknown): v is number => typeof v === 'number'
 
 describe('merge', () => {
-  test('mergeDescriptors', () => {
+  test('intersect primitive descriptors', () => {
     const booleanType = describePrimitive('boolean', validateBoolean)
     const numberType = describePrimitive('number', validateNumber)
 
-    const booleanOrNumberType = mergeDescriptors(booleanType, numberType)
+    const primitiveIntersectionType = intersectDescriptors(booleanType, numberType)
+
+    // intersection of multiple primitives is supposed to end in never
+    expect(primitiveIntersectionType.name).to.be.eq('never')
+    expect(primitiveIntersectionType.primitive).to.be.true
+    expect(primitiveIntersectionType.props).to.be.eq(null)
+    expect(primitiveIntersectionType.validate(true)).to.be.false
+    expect(primitiveIntersectionType.validate(0)).to.be.false
+    expect(primitiveIntersectionType.validate(NaN)).to.be.false
+    expect(primitiveIntersectionType.validate(Infinity)).to.be.false
+    expect(primitiveIntersectionType.validate('')).to.be.false
+    expect(primitiveIntersectionType.validate(null)).to.be.false
+    expect(() => primitiveIntersectionType.equals(1 as never, 1 as never)).to.throw('Equality check for type never failed')
+    expect(() => primitiveIntersectionType.equals(1 as never, true as never)).to.throw('Equality check for type never failed')
+    expect(() => primitiveIntersectionType.equals(1 as never, 'foo' as never)).to.throw('Equality check for type never failed')
+  })
+
+  test('intersect object descriptors', () => {
+    const fooType = describeObject('foo', {
+      foo: $boolean
+    })
+    const barType = describeObject('bar', {
+      bar: $number
+    })
+
+    const mergedType = intersectDescriptors(fooType, barType)
+
+    expect(mergedType.props).to.eql(new Set(['foo', 'bar']))
+    expect(mergedType.primitive).to.be.false
+    expect(mergedType.validate({ foo: true })).to.be.false
+    expect(mergedType.validate({ bar: 0 })).to.be.false
+    expect(mergedType.validate({ foo: true, bar: 0 })).to.be.true
+    expect(() => mergedType.equals({ foo: true } as any, { bar: 0 } as any)).to.throw()
+    expect(mergedType.equals({ foo: true, bar: 0 }, { foo: true, bar: 1 })).to.be.false
+    expect(mergedType.equals({ foo: true, bar: 0 }, { foo: true, bar: 0 })).to.be.true
+  })
+
+  test('union primitive descriptors', () => {
+    const booleanType = describePrimitive('boolean', validateBoolean)
+    const numberType = describePrimitive('number', validateNumber)
+
+    const booleanOrNumberType = unionDescriptors(booleanType, numberType)
 
     expect(booleanOrNumberType.name).to.be.eq('boolean | number')
     expect(booleanOrNumberType.validate(true)).to.be.true
@@ -28,7 +70,7 @@ describe('merge', () => {
     expect(booleanOrNumberType.props).to.be.eq(null)
   })
 
-  test('merge object descriptors', () => {
+  test('union object descriptors', () => {
     const fooType = describeObject('foo', {
       foo: describePrimitive('boolean', validateBoolean)
     })
@@ -36,7 +78,7 @@ describe('merge', () => {
       bar: describePrimitive('number', validateNumber)
     })
 
-    const mergedType = mergeDescriptors(fooType, barType)
+    const mergedType = unionDescriptors(fooType, barType)
 
     expect(mergedType.props).to.eql(new Set(['foo', 'bar']))
     expect(mergedType.primitive).to.be.false
@@ -52,7 +94,7 @@ describe('merge', () => {
     })
     const barType = describePrimitive('number', validateNumber)
 
-    const mergedType = mergeDescriptors(fooType, barType)
+    const mergedType = unionDescriptors(fooType, barType)
 
     expect(mergedType.props).to.eql(new Set(['foo']))
     expect(mergedType.primitive).to.be.false
@@ -60,13 +102,13 @@ describe('merge', () => {
     expect(mergedType.validate(0)).to.be.true
   })
 
-  test('mergeIdentifiers', () => {
+  test('unionIdentifiers', () => {
     const $foo = createIdentifier(describePrimitive('foo', validateBoolean))
     const $bar = createIdentifier(describePrimitive('bar', validateNumber))
 
-    const $merged = mergeIdentifiers($foo, $bar)
+    const $merged = unionIdentifiers($foo, $bar)
     expect($merged.is(0)).to.be.true
     expect($merged.is(true)).to.be.true
-    expect(() => mergeIdentifiers($foo, {} as any)).to.throw()
+    expect(() => unionIdentifiers($foo, {} as any)).to.throw()
   })
 })

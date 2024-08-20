@@ -10,6 +10,6 @@ export type {
 export * from './errors'
 export { describeArray, describeInstance, describeObject, describePrimitive, describeType } from './describe'
 export { createIdentifier } from './identifier'
-export { mergeDescriptors } from './merge'
+export { unionDescriptors, unionIdentifiers } from './merge'
 
 export * from './lib'

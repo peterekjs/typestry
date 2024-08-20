@@ -2,6 +2,8 @@ import type { AnyFunction, Primitive } from 'ts-essentials'
 
 const SYMBOL_DESCRIPTOR = Symbol('identity.descriptor')
 
+type Intersect<T> = (T extends any ? ((x: T) => 0) : never) extends ((x: infer R) => 0) ? R : never
+
 type Defined<T> = T extends undefined ? never : T
 type AnyRecord = Record<string | number | symbol, unknown>
 type Assignable = AnyRecord | AnyFunction
@@ -39,8 +41,10 @@ type ExtractTypeFromDefinition<T> = T extends TypeDescriptor<infer S> ? S : T ex
 
 type TypeFromPropDefinitions<T extends {}> = { [K in keyof T]: ExtractTypeFromDefinition<T[K]> }
 
-type MergedDescriptor<T extends TypeDescriptor<any>[]> = TypeDescriptor<TypeFromDescriptor<T[number]>>
-type MergedIdentifier<T extends TypeIdentifier<any>[]> = TypeIdentifier<TypeFromIdentifier<T[number]>>
+type TypeDescriptorIntersection<T extends TypeDescriptor<any>[]> = TypeDescriptor<Intersect<TypeFromDescriptor<T[number]>>>
+type TypeDescriptorUnion<T extends TypeDescriptor<any>[]> = TypeDescriptor<TypeFromDescriptor<T[number]>>
+type TypeIdentifierIntersection<T extends TypeIdentifier<any>[]> = TypeIdentifier<Intersect<TypeFromIdentifier<T[number]>>>
+type TypeIdentifierUnion<T extends TypeIdentifier<any>[]> = TypeIdentifier<TypeFromIdentifier<T[number]>>
 
 export { SYMBOL_DESCRIPTOR }
 export type {
@@ -48,12 +52,13 @@ export type {
   Assignable,
   Defined,
   ExtendedTypeOf,
-  MergedDescriptor,
-  MergedIdentifier,
+  Intersect,
   Primitive,
   PropDefinitions,
   PropDescriptors,
   TypeDescriptor,
+  TypeDescriptorIntersection,
+  TypeDescriptorUnion,
   TypeFromDescriptor,
   TypeFromDescriptors,
   TypeFromIdentifier,
@@ -62,4 +67,6 @@ export type {
   TypeFromPropDescriptors,
   TypeFromPropIdentifiers,
   TypeIdentifier,
+  TypeIdentifierIntersection,
+  TypeIdentifierUnion,
 }
