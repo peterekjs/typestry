@@ -1,4 +1,4 @@
-import { SYMBOL_DESCRIPTOR, type AnyRecord, type Primitive, type PropDefinitions, type TypeDescriptor, type TypeFromPropDefinitions } from './definitions'
+import { SYMBOL_DESCRIPTOR, type AnyRecord, type Primitive, type PropDefinitions, type PropDescriptors, type TypeDescriptor } from './definitions'
 import { isObject } from './helpers'
 
 type DescribeTypeOptions<T> = {
@@ -45,6 +45,9 @@ function describePrimitive<T extends Primitive>(name: string, validate: (input: 
     get props() {
       return null
     },
+    get propDescriptors() {
+      return {} as PropDescriptors<T>
+    },
   }
 }
 
@@ -72,6 +75,9 @@ function describeType<T>({ name, validate, props, ...options }: DescribeTypeOpti
     get props(): (T extends object ? Set<keyof T> : null) | null {
       return primitive || !props ? null : (new Set(props) as T extends object ? Set<keyof T> : never)
     },
+    get propDescriptors() {
+      return {} as PropDescriptors<T>
+    },
   }
 }
 
@@ -96,6 +102,9 @@ function describeInstance<T extends object>(
     },
     get props(): T extends object ? Set<keyof T> : never {
       return new Set(props) as T extends object ? Set<keyof T> : never
+    },
+    get propDescriptors() {
+      return {} as PropDescriptors<T>
     },
   }
 }
@@ -127,6 +136,9 @@ function describeArray<T extends TypeDescriptor<any>>(
     },
     get props() {
       return null
+    },
+    get propDescriptors() {
+      return {} as PropDescriptors<T[]>
     },
   } as T extends TypeDescriptor<infer S> ? TypeDescriptor<S[]> : never
 }
@@ -206,6 +218,9 @@ function describeObject<T extends {}>(
     },
     get props(): T extends object ? Set<keyof T> : never {
       return new Set(new Map(getPropEntries()).keys()) as T extends object ? Set<keyof T> : never
+    },
+    get propDescriptors() {
+      return Object.fromEntries(getPropEntries()) as PropDescriptors<T>
     },
   }
 }

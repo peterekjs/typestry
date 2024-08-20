@@ -15,6 +15,7 @@ type TypeDescriptor<T> = {
   equals(a: T, b: T): boolean
   readonly primitive: boolean
   readonly props: (T extends object ? Set<keyof T> : null) | null
+  readonly propDescriptors: PropDescriptors<T>
 }
 
 type TypeIdentifier<T> = {
@@ -23,10 +24,11 @@ type TypeIdentifier<T> = {
   assert(input: unknown): asserts input is T
   ensure(input: unknown): T
   equals: TypeDescriptor<T>['equals']
+  readonly props: PropIdentifiers<T>
   [SYMBOL_DESCRIPTOR]: TypeDescriptor<T>
 }
 
-type PropDefinitions<T> = { [K in keyof T]: TypeDescriptor<T[K]> | TypeIdentifier<T[K]> }
+type PropDefinitions<T> = T extends Primitive ? {} : { [K in keyof T]: TypeDescriptor<T[K]> | TypeIdentifier<T[K]> }
 type PropDescriptors<T> = { [K in keyof T]: TypeDescriptor<T[K]> }
 type PropIdentifiers<T> = { [K in keyof T]: TypeIdentifier<T[K]> }
 
@@ -56,6 +58,7 @@ export type {
   Primitive,
   PropDefinitions,
   PropDescriptors,
+  PropIdentifiers,
   TypeDescriptor,
   TypeDescriptorIntersection,
   TypeDescriptorUnion,

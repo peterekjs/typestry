@@ -1,5 +1,5 @@
 import { SYMBOL_DESCRIPTOR } from './definitions'
-import type { Intersect, TypeDescriptor, TypeDescriptorIntersection, TypeDescriptorUnion, TypeFromDescriptor, TypeIdentifier, TypeIdentifierIntersection, TypeIdentifierUnion } from './definitions'
+import type { Intersect, PropDescriptors, TypeDescriptor, TypeDescriptorIntersection, TypeDescriptorUnion, TypeFromDescriptor, TypeIdentifier, TypeIdentifierIntersection, TypeIdentifierUnion } from './definitions'
 import { createIdentifier } from './identifier'
 
 function* mergeProps<T extends TypeDescriptor<any>[]>(descriptors: T) {
@@ -46,6 +46,11 @@ function intersectDescriptors<T extends TypeDescriptor<any>[]>(...descriptors: T
         : (new Set(mergeProps(descriptors)) satisfies Set<keyof TypeFromDescriptor<T[number]>>)
       ) as Intersect<TypeFromDescriptor<T[number]>> extends object ? Set<keyof Intersect<TypeFromDescriptor<T[number]>>> : null
     },
+    get propDescriptors() {
+      return Object.fromEntries(
+        descriptors.map(x => Object.entries(x.propDescriptors)).flat(1)
+      ) as PropDescriptors<Intersect<TypeFromDescriptor<T[number]>>>
+    },
   } satisfies TypeDescriptorIntersection<T>
 }
 
@@ -89,6 +94,11 @@ function unionDescriptors<T extends TypeDescriptor<any>[]>(...descriptors: T): T
         ? null
         : (new Set(mergeProps(descriptors)) satisfies Set<keyof TypeFromDescriptor<T[number]>>)
       ) as TypeFromDescriptor<T[number]> extends object ? Set<keyof TypeFromDescriptor<T[number]>> : null
+    },
+    get propDescriptors() {
+      return Object.fromEntries(
+        descriptors.map(x => Object.entries(x.propDescriptors)).flat(1)
+      ) as PropDescriptors<TypeFromDescriptor<T[number]>>
     },
   } satisfies TypeDescriptorUnion<T>
 }
