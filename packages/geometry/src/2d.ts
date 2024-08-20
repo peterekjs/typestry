@@ -1,5 +1,5 @@
 import { normalizeNumericValue } from './common'
-import type { Matrix, Point, Rect, Size } from './definitions'
+import type { Matrix, Point, PointRange, Rect, Size } from './definitions'
 import { applyMatrixToPoint, multiplyMatrices } from './matrix'
 
 const transformParents = new WeakMap<TransformMatrix2D, TransformMatrix2D>()
@@ -139,7 +139,7 @@ export class Point2D implements Point {
   }
 
   toString() {
-    return `[x: ${this.x}, y: ${this.y}]`
+    return `Point2D [x: ${this.x}, y: ${this.y}]`
   }
 
   static fromPoint({ x, y }: Partial<Point>) {
@@ -148,6 +148,10 @@ export class Point2D implements Point {
 
   static fromMatrix([[x], [y]]: Matrix) {
     return new Point2D(x, y)
+  }
+
+  static toRange(...points: Point[]) {
+    return getPointRange(points)
   }
 }
 
@@ -173,6 +177,10 @@ export class Size2D implements Size {
 
   transform(matrix: Matrix | TransformMatrix2D) {
     return Size2D.fromMatrix(applyMatrixToPoint([...matrix], { x: this.width, y: this.height }))
+  }
+
+  toString() {
+    return `Size2D [width: ${this.width}, height: ${this.height}]`
   }
 
   static fromSize({ width, height }: Partial<Size>) {
@@ -229,17 +237,32 @@ export class Rect2D implements Rect {
     return new Rect2D(method(this.x), method(this.y), method(this.width), method(this.height))
   }
 
+  toString() {
+    return `Rect2D [x: ${this.x}, y: ${this.y}, width: ${this.width}, height: ${this.height}]`
+  }
+
+  static fromRange({ min, max }: PointRange) {
+    return new Rect2D(min.x, min.y, max.x - min.x, max.y - min.y)
+  }
+
   static fromRect({ x, y, width, height }: Partial<Rect>) {
     return new Rect2D(x, y, width, height)
   }
 
   static fromPoints(...points: Point[]) {
-    const x = points.map(p => p.x)
-    const y = points.map(p => p.y)
-    const min = { x: Math.min(...x), y: Math.min(...y) }
-    const max = { x: Math.max(...x), y: Math.max(...y) }
+    return Rect2D.fromRange(getPointRange(points))
+  }
+}
 
-    return new Rect2D(min.x, min.y, max.x - min.x, max.y - min.y)
+function getPointRange(points: Point[]): PointRange {
+  const x = points.map(p => p.x)
+  const y = points.map(p => p.y)
+  const min = { x: Math.min(...x), y: Math.min(...y) }
+  const max = { x: Math.max(...x), y: Math.max(...y) }
+
+  return {
+    min,
+    max
   }
 }
 

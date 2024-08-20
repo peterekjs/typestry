@@ -169,6 +169,7 @@ function describeObject<T extends {}>(
       if (!definition || typeof definition !== 'object') continue
       if (SYMBOL_DESCRIPTOR in definition) {
         yield [prop, definition[SYMBOL_DESCRIPTOR] as TypeDescriptor<any>]
+        continue
       }
       yield [prop, definition]
     }
