@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { describePrimitive, describeRecord } from './describe'
+import { describePrimitive, describeObject } from './describe'
 import { mergeDescriptors, mergeIdentifiers } from './merge'
 import { createIdentifier } from './identifier'
 
@@ -29,10 +29,10 @@ describe('merge', () => {
   })
 
   test('merge object descriptors', () => {
-    const fooType = describeRecord('foo', {
+    const fooType = describeObject('foo', {
       foo: describePrimitive('boolean', validateBoolean)
     })
-    const barType = describeRecord('bar', {
+    const barType = describeObject('bar', {
       bar: describePrimitive('number', validateNumber)
     })
 
@@ -47,7 +47,7 @@ describe('merge', () => {
   })
 
   test('merge descriptors of object with primitive', () => {
-    const fooType = describeRecord('foo', {
+    const fooType = describeObject('foo', {
       foo: describePrimitive('boolean', validateBoolean)
     })
     const barType = describePrimitive('number', validateNumber)

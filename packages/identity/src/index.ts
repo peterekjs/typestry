@@ -3,12 +3,12 @@ export type {
   TypeDescriptor,
   TypeFromDescriptor,
   TypeFromDescriptors,
-  TypeFromIdentity,
+  TypeFromIdentifier,
   TypeFromPropDescriptors,
   TypeIdentifier,
 } from './definitions'
 export * from './errors'
-export { describeArray, describeInstance, describePrimitive, describeRecord, describeType } from './describe'
+export { describeArray, describeInstance, describeObject, describePrimitive, describeType } from './describe'
 export { createIdentifier } from './identifier'
 export { mergeDescriptors } from './merge'
 

@@ -1,4 +1,4 @@
-import type { AnyRecord, Primitive, PropDescriptors, TypeDescriptor, TypeFromPropDescriptors } from './definitions'
+import { SYMBOL_DESCRIPTOR, type AnyRecord, type Primitive, type PropDefinitions, type TypeDescriptor, type TypeFromPropDefinitions } from './definitions'
 import { isObject } from './helpers'
 
 type DescribeTypeOptions<T> = {
@@ -8,6 +8,8 @@ type DescribeTypeOptions<T> = {
   props?: T extends object ? Iterable<keyof T> : never
   primitive?: boolean
 }
+
+export { describeArray, describeInstance, describeObject, describePrimitive, describeType }
 
 function comparePrimitives<T>(a: T, b: T) {
   return a === b
@@ -131,15 +133,15 @@ function describeArray<T extends TypeDescriptor<any>>(
 
 const hasOwn = <T extends AnyRecord>(input: object, key: keyof T): input is T => Object.hasOwn(input, key)
 
-function describeRecord<P extends PropDescriptors<NonNullable<unknown>>, T = TypeFromPropDescriptors<P>>(
+function describeObject<T extends {}>(
   name: string,
-  propDescriptors: P
+  propDefinitions: PropDefinitions<T>
 ): TypeDescriptor<T> {
-  if (!isObject(propDescriptors)) {
-    throw new TypeError('Expected propDescriptors to be a Record', { cause: { propDescriptors } })
+  if (!isObject(propDefinitions)) {
+    throw new TypeError('Expected propDescriptors to be an Object', { cause: { propDefinitions } })
   }
 
-  const getPropEntries = () => Object.entries(propDescriptors) as [keyof T, TypeDescriptor<T[keyof T]>][]
+  const getPropEntries = () => [...collectPropDescriptorEntries(propDefinitions)]
 
   function validateEntry(input: object, [key, descriptor]: [keyof T, TypeDescriptor<T[keyof T]>]) {
     return hasOwn(input, key) && descriptor.validate(input[key])
@@ -160,6 +162,16 @@ function describeRecord<P extends PropDescriptors<NonNullable<unknown>>, T = Typ
 
     const results = new Set(validateProps(a, b))
     return results.size === 1 && results.has(true)
+  }
+
+  function* collectPropDescriptorEntries(input: PropDefinitions<T>): Generator<[keyof T, TypeDescriptor<T[keyof T]>]> {
+    for (const [prop, definition] of Object.entries(input) as [keyof T, TypeDescriptor<T[keyof T]>][]) {
+      if (!definition || typeof definition !== 'object') continue
+      if (SYMBOL_DESCRIPTOR in definition) {
+        yield [prop, definition[SYMBOL_DESCRIPTOR] as TypeDescriptor<any>]
+      }
+      yield [prop, definition]
+    }
   }
 
   function* validateProps(a: T, b: T) {
@@ -192,9 +204,7 @@ function describeRecord<P extends PropDescriptors<NonNullable<unknown>>, T = Typ
       return false
     },
     get props(): T extends object ? Set<keyof T> : never {
-      return new Set(Object.keys(propDescriptors)) as T extends object ? Set<keyof T> : never
+      return new Set(new Map(getPropEntries()).keys()) as T extends object ? Set<keyof T> : never
     },
   }
 }
-
-export { describeArray, describeInstance, describeRecord, describePrimitive, describeType }

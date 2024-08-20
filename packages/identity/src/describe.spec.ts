@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { describeArray, describeInstance, describePrimitive, describeRecord, describeType } from './describe'
+import { describeArray, describeInstance, describePrimitive, describeObject, describeType } from './describe'
 
 const validateBoolean = (v: unknown): v is boolean => typeof v === 'boolean'
 
@@ -69,12 +69,12 @@ describe('describe', () => {
     expect(arrayType.props).to.be.eq(null)
   })
 
-  test('describeRecord', () => {
-    const foo = describeRecord('foo', {
+  test('describeObject', () => {
+    const foo = describeObject('foo', {
       bar: describePrimitive('boolean', validateBoolean),
     })
 
-    expect(() => describeRecord('fail', true)).to.throw()
+    expect(() => describeObject('fail', true as any)).to.throw()
     expect(foo.name).to.be.eq('foo')
     expect(foo.validate({})).to.be.false
     expect(foo.validate({ bar: true })).to.be.true
@@ -87,7 +87,7 @@ describe('describe', () => {
     expect(foo.primitive).to.be.false
     expect(foo.props).to.eql(new Set(['bar']))
 
-    const bar = describeRecord('bar', {
+    const bar = describeObject('bar', {
       a: describePrimitive('boolean', validateBoolean),
       b: describePrimitive('boolean', validateBoolean)
     })

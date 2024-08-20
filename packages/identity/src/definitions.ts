@@ -24,15 +24,23 @@ type TypeIdentifier<T> = {
   [SYMBOL_DESCRIPTOR]: TypeDescriptor<T>
 }
 
+type PropDefinitions<T> = { [K in keyof T]: TypeDescriptor<T[K]> | TypeIdentifier<T[K]> }
 type PropDescriptors<T> = { [K in keyof T]: TypeDescriptor<T[K]> }
+type PropIdentifiers<T> = { [K in keyof T]: TypeIdentifier<T[K]> }
 
 type TypeFromDescriptor<T extends TypeDescriptor<unknown>> = T extends TypeDescriptor<infer S> ? S : never
+type TypeFromIdentifier<T extends TypeIdentifier<unknown>> = T extends TypeIdentifier<infer S> ? S : never
 type TypeFromDescriptors<T extends TypeDescriptor<any>[]> = T[number] extends TypeDescriptor<infer S> ? S : never
-type TypeFromIdentity<T extends TypeIdentifier<unknown>> = T extends TypeIdentifier<infer S> ? S : never
+type TypeFromIdentifiers<T extends TypeIdentifier<any>[]> = T[number] extends TypeIdentifier<infer S> ? S : never
 type TypeFromPropDescriptors<T extends PropDescriptors<unknown>> = T extends PropDescriptors<infer S> ? S : never
+type TypeFromPropIdentifiers<T extends PropIdentifiers<unknown>> = T extends PropIdentifiers<infer S> ? S : never
+
+type ExtractTypeFromDefinition<T> = T extends TypeDescriptor<infer S> ? S : T extends TypeIdentifier<infer S> ? S : never
+
+type TypeFromPropDefinitions<T extends {}> = { [K in keyof T]: ExtractTypeFromDefinition<T[K]> }
 
 type MergedDescriptor<T extends TypeDescriptor<any>[]> = TypeDescriptor<TypeFromDescriptor<T[number]>>
-type MergedIdentifier<T extends TypeIdentifier<any>[]> = T[number] extends TypeIdentifier<infer S> ? TypeIdentifier<S> : never
+type MergedIdentifier<T extends TypeIdentifier<any>[]> = TypeIdentifier<TypeFromIdentifier<T[number]>>
 
 export { SYMBOL_DESCRIPTOR }
 export type {
@@ -43,11 +51,15 @@ export type {
   MergedDescriptor,
   MergedIdentifier,
   Primitive,
+  PropDefinitions,
   PropDescriptors,
   TypeDescriptor,
   TypeFromDescriptor,
   TypeFromDescriptors,
-  TypeFromIdentity,
+  TypeFromIdentifier,
+  TypeFromIdentifiers,
+  TypeFromPropDefinitions,
   TypeFromPropDescriptors,
+  TypeFromPropIdentifiers,
   TypeIdentifier,
 }
