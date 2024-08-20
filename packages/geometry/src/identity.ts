@@ -17,10 +17,8 @@ const $Size: TypeIdentifier<Size> = createIdentifier(describeObject<Size>('Size'
 }))
 
 const $Rect: TypeIdentifier<Rect> = createIdentifier(describeObject<Rect>('Rect', {
-  x: $number,
-  y: $number,
-  width: $number,
-  height: $number,
+  ...$Point.props,
+  ...$Size.props,
 }))
 
 export { $Point, $PointRange, $Rect, $Size }
