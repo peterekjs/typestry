@@ -63,6 +63,14 @@ describe('Size2D', () => {
     expect(() => { size.width = 'test' as any }).toThrowError()
   })
 
+  test('Size2D.fromPoint', () => {
+    const point = { x: 300, y: 200 }
+    const size = Size2D.fromPoint(point)
+    expect(size).to.toBeInstanceOf(Size2D)
+    expect(size.width).to.eq(point.x)
+    expect(size.height).to.eq(point.y)
+  })
+
   test('Size2D.fromSize', () => {
     let a = Size2D.fromSize({})
     expect(a.width).to.eq(0)
@@ -86,6 +94,11 @@ describe('Size2D', () => {
     const a = Size2D.fromSize({ width: 0.5, height: 1 })
     const matrix = new TransformMatrix2D().scale(2)
     expect(a.transform(matrix)).to.eql({ width: 1, height: 2 })
+  })
+
+  test('toPoint', () => {
+    const a = Size2D.fromSize({ width: 0, height: 1 })
+    expect(a.toPoint()).to.eql({ x: 0, y: 1 })
   })
 
   test('toString', () => {

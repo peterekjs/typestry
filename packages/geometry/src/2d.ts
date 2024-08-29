@@ -179,8 +179,16 @@ export class Size2D implements Size {
     return Size2D.fromMatrix(applyMatrixToPoint([...matrix], { x: this.width, y: this.height }))
   }
 
+  toPoint(): Point {
+    return { x: this.width, y: this.height }
+  }
+
   toString() {
     return `Size2D [width: ${this.width}, height: ${this.height}]`
+  }
+
+  static fromPoint({ x, y }: Point) {
+    return new Size2D(x, y)
   }
 
   static fromSize({ width, height }: Partial<Size>) {
