@@ -32,9 +32,6 @@
     "test:ci": "vitest run",
     "test:ui": "vitest --ui"
   },
-  "peerDependencies": {
-    "typescript": ">=5.6.0"
-  },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
     "@tsconfig/node20": "^20.1.4",
