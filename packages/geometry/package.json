@@ -37,10 +37,8 @@
     }
   },
   "typesVersions": {
-    ">=5": {
-      "index": [
-        "./dist/index.d.ts"
-      ]
+    "*": {
+      ".": ["./dist/src/index.d.ts"]
     }
   },
   "scripts": {
