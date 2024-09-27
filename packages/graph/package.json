@@ -1,14 +1,14 @@
 {
-  "name": "@typestry/geometry",
+  "name": "@typestry/graph",
   "version": "0.0.0",
-  "description": "Geometry helpers",
+  "description": "Data flow handling",
   "keywords": [
     "typescript",
     "ts",
     "javascript",
     "js",
-    "identity",
-    "type"
+    "graph",
+    "data"
   ],
   "author": "Jiri Peterek <jiri@peterek.net>",
   "license": "MIT",
@@ -31,14 +31,16 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/src/index.d.ts",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     }
   },
   "typesVersions": {
     "*": {
-      ".": ["./dist/src/index.d.ts"]
+      ".": [
+        "./dist/src/index.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -47,6 +49,12 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@typestry/identity": "^0.3.0"
+    "@typestry/identity": ">=0.0.0 <1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5.6.2"
   }
 }

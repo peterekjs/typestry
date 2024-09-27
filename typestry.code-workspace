@@ -19,6 +19,10 @@
     {
       "name": "@typestry/geometry",
       "path": "packages/geometry"
+    },
+    {
+      "name": "@typestry/graph",
+      "path": "packages/graph"
     }
   ],
   "settings": {
