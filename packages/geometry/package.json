@@ -43,7 +43,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "dev": "vite build --watch"
+    "dev": "vitest"
   },
   "dependencies": {
     "@typestry/identity": "^0.3.0"
