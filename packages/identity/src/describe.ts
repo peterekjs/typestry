@@ -143,8 +143,6 @@ function describeArray<T extends TypeDescriptor<any>>(
   } as T extends TypeDescriptor<infer S> ? TypeDescriptor<S[]> : never
 }
 
-const hasOwn = <T extends AnyRecord>(input: object, key: keyof T): input is T => Object.hasOwn(input, key)
-
 function describeObject<T extends {}>(
   name: string,
   propDefinitions: PropDefinitions<T>
@@ -155,8 +153,8 @@ function describeObject<T extends {}>(
 
   const getPropEntries = () => [...collectPropDescriptorEntries(propDefinitions)]
 
-  function validateEntry(input: object, [key, descriptor]: [keyof T, TypeDescriptor<T[keyof T]>]) {
-    return hasOwn(input, key) && descriptor.validate(input[key])
+  function validateEntry(input: any, [key, descriptor]: [keyof T, TypeDescriptor<T[keyof T]>]) {
+    return descriptor.validate(input[key])
   }
 
   function validate(input: unknown): input is T {
