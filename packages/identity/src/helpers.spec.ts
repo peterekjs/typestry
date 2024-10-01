@@ -1,7 +1,10 @@
 import { describe, expect, test } from 'vitest'
 import { type ExtendedTypeOf } from './definitions'
-import { assert, getType, isObject } from './helpers'
+import { assert, getType, isObject, pickProps, stripObject } from './helpers'
 import { TEST_VALUES, type TestKey } from '../test/common'
+import { createIdentifier } from './identifier'
+import { describeObject } from './describe'
+import { $number } from './lib'
 
 describe('helpers', () => {
   test('assert', () => {
@@ -84,5 +87,17 @@ describe('helpers', () => {
     testValue('Date', 'Date')
     testValue('Date (invalid)', 'Date')
     testValue('Error', 'Error')
+  })
+})
+
+describe('stripObject', () => {
+  test('basic functionality', () => {
+    const $Foo = createIdentifier(describeObject('Foo', {
+      foo: $number,
+      bar: $number
+    }))
+
+    expect(pickProps(['foo', 'bar'], { foo: 1, bar: 0, baz: true })).to.eql({ foo: 1, bar: 0 })
+    expect(stripObject($Foo, { foo: 1, bar: 0, baz: true })).to.eql({ foo: 1, bar: 0 })
   })
 })

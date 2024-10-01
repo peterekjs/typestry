@@ -1,5 +1,5 @@
 import type { Primitive } from 'ts-essentials'
-import { type ExtendedTypeOf } from './definitions'
+import { SYMBOL_DESCRIPTOR, TypeIdentifier, type ExtendedTypeOf } from './definitions'
 import { AssertionError } from './errors'
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -52,4 +52,27 @@ function getType(value: unknown): ExtendedTypeOf {
   return baseType
 }
 
-export { assert, getType, isObject, isPrimitive }
+/**
+ * Strip object to contain only properties defined by identifier
+ * @template T Object type
+ * @param {TypeIdentifier<T>} identifier Object type identifier
+ * @param {T} input Object to be stripped
+ * @returns Object stripped of all undeclared properties
+ */
+function stripObject<T extends object>(identifier: TypeIdentifier<T>, input: unknown) {
+  const descriptor = identifier[SYMBOL_DESCRIPTOR]
+  if (descriptor.primitive) {
+    throw new TypeError('Expected non-primitive TypeIdentifier', { cause: { identifier }})
+  }
+  identifier.assert(input)
+
+  return pickProps(Object.keys(descriptor.propDescriptors) as (keyof T)[], input)
+}
+
+function pickProps<T extends object, P extends keyof T>(allowedProps: P[] | Set<P>, input: T): Pick<T, P> {
+  return Object.fromEntries(
+    Object.entries(input).filter(([key]) => new Set<P>(allowedProps).has(key as P))
+  ) as Pick<T, P>
+}
+
+export { assert, getType, isObject, isPrimitive, pickProps, stripObject }
