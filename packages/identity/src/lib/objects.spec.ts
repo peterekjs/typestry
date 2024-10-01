@@ -15,8 +15,10 @@ import {
 } from './objects'
 import { createIdentifier } from '../identifier'
 import { describeObject } from '../describe'
-import { $number } from './primitives'
+import { $number, $string } from './primitives'
 import { maybe } from './modifiers'
+import { intersectIdentifiers, unionIdentifiers } from '../merge'
+import { $positiveNumber, $safeInteger } from './numbers'
 
 testIdentity($Map, pick(['Map']))
 testIdentity($Set, pick(['Set']))
@@ -48,5 +50,35 @@ describe('edge cases', () => {
     expect($SomeObject.is({ foo: Infinity, bar: 0 })).to.be.true
     expect($SomeObject.is({ foo: 0, bar: true })).to.be.false
     expect($SomeObject.is({ foo: '' })).to.be.false
+  })
+
+  test('object with complex intersections', () => {
+    const $Foo = createIdentifier(describeObject('Foo', {
+      foo: maybe($string),
+      bar: maybe(intersectIdentifiers($safeInteger, $positiveNumber)),
+      baz: maybe(unionIdentifiers($safeInteger, $string)),
+    }))
+
+    expect($Foo.is({})).to.be.true
+    expect($Foo.is({ foo: '' })).to.be.true
+    expect($Foo.is({ foo: null })).to.be.true
+    expect($Foo.is({ foo: undefined })).to.be.true
+
+    expect($Foo.is({ bar: 1 })).to.be.true
+    expect($Foo.is({ bar: null })).to.be.true
+    expect($Foo.is({ bar: undefined })).to.be.true
+    expect($Foo.is({ bar: 0 })).to.be.false
+    expect($Foo.is({ bar: -1 })).to.be.false
+    expect($Foo.is({ bar: 1.5 })).to.be.false
+
+    expect($Foo.is({ baz: 1 })).to.be.true
+    expect($Foo.is({ baz: '' })).to.be.true
+    expect($Foo.is({ baz: null })).to.be.true
+    expect($Foo.is({ baz: undefined })).to.be.true
+    expect($Foo.is({ bar: 0 })).to.be.false
+    expect($Foo.is({ bar: -1 })).to.be.false
+    expect($Foo.is({ bar: 1.5 })).to.be.false
+
+    expect($Foo.is({ foo: '', bar: 1, baz: null })).to.be.true
   })
 })
