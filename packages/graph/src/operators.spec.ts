@@ -10,7 +10,7 @@ describe('extend', () => {
     const node = Node.create({ identifier: $number, updates: () => of([1, 2, 3]) })
     const multiply = map((x: number) => x * x)
     const extended = extend((node: Node<number>) => ({
-      multiplied: Node.create({ identifier: $number, updates: () => multiply(node) })
+      multiplied: Node.create({ identifier: $number, updates: () => multiply(node) }),
     }))
 
     let i = 0
@@ -30,10 +30,10 @@ describe('extend', () => {
     const multiply = map((x: number) => x * x)
 
     const foo = extend(<T extends Node<number>>(node: T) => ({
-      multiplied: Node.create({ identifier: $number, updates: () => multiply(node) })
+      multiplied: Node.create({ identifier: $number, updates: () => multiply(node) }),
     }))
     const bar = extend(<T extends Node<number>>(node: T) => ({
-      added: Node.create({ identifier: $number, updates: () => add(node) })
+      added: Node.create({ identifier: $number, updates: () => add(node) }),
     }))
 
     const extended = bar(foo(node))
@@ -53,7 +53,6 @@ describe('extend', () => {
       expect(value).toBe(++i * i)
     }
   })
-
 })
 
 describe('initialValue', () => {

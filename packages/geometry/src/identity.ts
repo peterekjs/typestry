@@ -3,7 +3,7 @@ import type { Point, PointRange, Size, Rect } from './definitions'
 
 const $Point: TypeIdentifier<Point> = createIdentifier(describeObject<Point>('Point', {
   x: $number,
-  y: $number
+  y: $number,
 }))
 
 const $PointRange: TypeIdentifier<PointRange> = createIdentifier(describeObject<PointRange>('PointRange', {

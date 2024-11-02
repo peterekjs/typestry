@@ -15,7 +15,7 @@ function comparePrimitives<T>(a: T, b: T) {
   return a === b
 }
 function compareProps<T extends object>(props: Iterable<keyof T> = []): (a: T, b: T) => boolean {
-  return (a: T, b: T) => [...props].every((p) => a[p] === b[p])
+  return (a: T, b: T) => [...props].every(p => a[p] === b[p])
 }
 
 function createEqualityAssertion<T>(name: string, validate: (input: unknown) => input is T) {
@@ -83,7 +83,7 @@ function describeType<T>({ name, validate, props, ...options }: DescribeTypeOpti
 
 function describeInstance<T extends object>(
   Ctor: new () => T,
-  instantiator: () => NoInfer<T> = () => new Ctor()
+  instantiator: () => NoInfer<T> = () => new Ctor(),
 ): TypeDescriptor<T> {
   const props = new Set(Object.keys(instantiator() ?? Object.getOwnPropertyDescriptors(Ctor).prototype.value) as (keyof T)[])
   const validate = (input: unknown): input is T => input instanceof Ctor
@@ -110,7 +110,7 @@ function describeInstance<T extends object>(
 }
 
 function describeArray<T extends TypeDescriptor<any>>(
-  descriptor: T
+  descriptor: T,
 ): T extends TypeDescriptor<infer S> ? TypeDescriptor<S[]> : never {
   function validate(input: unknown): input is T[] {
     return Array.isArray(input) && input.every(descriptor.validate)
@@ -147,7 +147,7 @@ const hasOwn = <T extends AnyRecord>(input: object, key: keyof T): input is T =>
 
 function describeObject<T extends {}>(
   name: string,
-  propDefinitions: PropDefinitions<T>
+  propDefinitions: PropDefinitions<T>,
 ): TypeDescriptor<T> {
   if (!isObject(propDefinitions)) {
     throw new TypeError('Expected propDescriptors to be an Object', { cause: { propDefinitions } })
@@ -205,7 +205,7 @@ function describeObject<T extends {}>(
   function preparePropError(key: keyof T, typeName: string, cause: any) {
     return (which: string) => new TypeError(
       `Property '${name}.${String(key)}' validation failed for ${which} argument. Expected type of ${typeName}.`,
-      { cause }
+      { cause },
     )
   }
 

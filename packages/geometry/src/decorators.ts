@@ -17,6 +17,6 @@ export function numeric<T>(
     },
     init(initialValue: number) {
       return normalizeNumericValue(initialValue)
-    }
+    },
   }
 }

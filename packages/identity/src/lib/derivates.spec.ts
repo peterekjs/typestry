@@ -19,7 +19,7 @@ testIdentity(
     'Date',
     'Date (invalid)',
     'Error',
-  ])
+  ]),
 )
 
 testIdentity($any, drop([]))

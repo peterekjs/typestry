@@ -4,14 +4,12 @@ import { describe, expect, test } from 'vitest'
 import { Node } from './node'
 
 describe('Node', () => {
-
   test('basic node', async () => {
     const node = createNumberNode()
 
     let i = 0
     for await (const value of node) {
       expect(value).to.eq(++i)
-      console.log(i)
     }
   })
 
@@ -31,6 +29,6 @@ function createNumberNode() {
       yield 1
       yield 2
       yield 3
-    }
+    },
   })
 }

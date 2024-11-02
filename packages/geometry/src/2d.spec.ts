@@ -11,7 +11,9 @@ describe('Point2D', () => {
     point = new Point2D(Infinity, NaN)
     expect(point.x).to.eq(Infinity)
     expect(point.y).to.eql(NaN)
-    expect(() => { point.x = 'test' as any }).toThrowError()
+    expect(() => {
+      point.x = 'test' as any
+    }).toThrowError()
   })
 
   test('Point2D.fromPoint', () => {
@@ -27,7 +29,7 @@ describe('Point2D', () => {
   })
 
   test('Point2D.toRange', () => {
-    expect(Point2D.toRange({ x: 0, y: 0 }, { x: 4, y: 2 }, { x: 8, y: 8 }, { x: -6, y: 3 })).to.eql({ min: { x: -6, y: 0 }, max: { x: 8, y: 8 }})
+    expect(Point2D.toRange({ x: 0, y: 0 }, { x: 4, y: 2 }, { x: 8, y: 8 }, { x: -6, y: 3 })).to.eql({ min: { x: -6, y: 0 }, max: { x: 8, y: 8 } })
   })
 
   test('round', () => {
@@ -60,7 +62,9 @@ describe('Size2D', () => {
     size = new Size2D(Infinity, NaN)
     expect(size.width).to.eq(Infinity)
     expect(size.height).to.eql(NaN)
-    expect(() => { size.width = 'test' as any }).toThrowError()
+    expect(() => {
+      size.width = 'test' as any
+    }).toThrowError()
   })
 
   test('Size2D.fromPoint', () => {
@@ -134,7 +138,9 @@ describe('Rect2D', () => {
     expect(rect.y).to.eql(NaN)
     expect(rect.width).to.eq(Infinity)
     expect(rect.height).to.eql(NaN)
-    expect(() => { rect.width = 'test' as any }).toThrowError()
+    expect(() => {
+      rect.width = 'test' as any
+    }).toThrowError()
   })
 
   test('Rect2D.fromRect', () => {

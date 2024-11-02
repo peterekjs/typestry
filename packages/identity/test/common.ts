@@ -85,7 +85,7 @@ function* drop(keys: Iterable<TestKey>): Generator<[TestKey, unknown]> {
 
 function testIdentity(
   identity: TypeIdentifier<any>,
-  positiveResultingEntries: Iterable<[TestKey, unknown]>
+  positiveResultingEntries: Iterable<[TestKey, unknown]>,
 ) {
   describe(identity.name, () => {
     const positive = new Map(positiveResultingEntries)

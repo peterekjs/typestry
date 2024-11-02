@@ -26,7 +26,6 @@ export function filter<T>(...args: [condition: (value: T) => boolean, input: Ite
   }
 }
 
-
 export function map<T, S>(mapper: (value: T) => S, input: IterableSource<T>): AsyncIteratorObject<S, BuiltinIteratorReturn>
 export function map<T, S>(mapper: (value: T) => S): (input: IterableSource<T>) => AsyncIteratorObject<S, BuiltinIteratorReturn>
 export function map<T, S>(...args: [mapper: (value: T) => S, input: IterableSource<T>] | [mapper: (value: T) => S]) {

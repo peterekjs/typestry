@@ -17,9 +17,9 @@ describe('buildNode', () => {
   })
 
   test('two extensions', async () => {
-    const withSigned = extend(((node: Node<string>) => ({
-      signed: Node.create({ identifier: $string, updates: () => map(x => '$'+x, node) })
-    })))
+    const withSigned = extend((node: Node<string>) => ({
+      signed: Node.create({ identifier: $string, updates: () => map(x => '$' + x, node) }),
+    }))
     const node = buildNode(stringNode, initialValue('foo'), withSigned)
     for await (const value of node) {
       expect(value).toBe('foo')

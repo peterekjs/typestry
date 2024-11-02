@@ -22,7 +22,8 @@ function createIdentifier<T>(descriptor: TypeDescriptor<T>): TypeIdentifier<T> {
     get props() {
       if (isNonPrimitiveDescriptor(descriptor)) {
         return Object.fromEntries(mapIdentifiers(descriptor.propDescriptors)) as PropIdentifiers<T>
-      } else {
+      }
+      else {
         return {} as PropIdentifiers<T>
       }
     },

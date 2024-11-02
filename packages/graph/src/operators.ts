@@ -5,7 +5,7 @@ type WithInitialValue<T> = { initialValue: T }
 type WithState<T> = { state: T | typeof EMPTY_VALUE }
 
 function extend<TNode extends Node, TExtension extends object>(extender: (node: TNode) => TExtension): ((node: TNode) => TNode & TExtension) {
-  return (node) => Object.assign(Node.clone(node) as TNode, extender(node))
+  return node => Object.assign(Node.clone(node) as TNode, extender(node))
 }
 
 function initialValue<T>(value: T): (node: Node<T>) => typeof node {
@@ -22,8 +22,8 @@ function initialValue<T>(value: T): (node: Node<T>) => typeof node {
       async *[Symbol.asyncIterator]() {
         const iterator = node[Symbol.asyncIterator]
         yield ctrl.initialValue
-        yield* iterator.call(next)
-      }
+        yield * iterator.call(next)
+      },
     })
 
     return next
@@ -48,7 +48,7 @@ function stateful<T>() {
           ctrl.state = value
           yield value
         }
-      }
+      },
     })
 
     return next

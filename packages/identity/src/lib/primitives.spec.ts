@@ -15,7 +15,7 @@ testIdentity(
     'infinity',
     'negative infinity',
     'NaN',
-  ])
+  ]),
 )
 testIdentity($string, pick(['empty string', 'non-empty string']))
 testIdentity($symbol, pick(['symbol']))

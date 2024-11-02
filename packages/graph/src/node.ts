@@ -45,9 +45,11 @@ class Node<T = any> implements AsyncIterable<T>, Disposable, AsyncDisposable {
       yield value
     }
   }
+
   [Symbol.dispose]() {
     getNodeControler(this).dispose()
   }
+
   async [Symbol.asyncDispose]() {
     await getNodeControler(this).dispose()
   }
