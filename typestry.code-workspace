@@ -4,7 +4,6 @@
       "steoates.autoimport",
       "mgmcdermott.vscode-language-babel",
       "dbaeumer.vscode-eslint",
-      "esbenp.prettier-vscode",
       "antfu.vite"
     ]
   },
@@ -33,7 +32,7 @@
     "editor.formatOnSaveMode": "file",
     "editor.formatOnType": false,
     "[json]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint",
       "editor.formatOnSave": true
     },
     "[javascript]": {
