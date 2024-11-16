@@ -1,4 +1,4 @@
-import { SYMBOL_DESCRIPTOR, type AnyRecord, type Primitive, type PropDefinitions, type PropDescriptors, type TypeDescriptor } from './definitions'
+import { SYMBOL_DESCRIPTOR, TypeIdentifier, type AnyRecord, type Primitive, type PropDefinitions, type PropDescriptors, type TypeDescriptor } from './definitions'
 import { isObject } from './helpers'
 
 type DescribeTypeOptions<T> = {
@@ -109,9 +109,9 @@ function describeInstance<T extends object>(
   }
 }
 
-function describeArray<T extends TypeDescriptor<any>>(
-  descriptor: T
-): T extends TypeDescriptor<infer S> ? TypeDescriptor<S[]> : never {
+function describeArray<T>(input: TypeDescriptor<T> | TypeIdentifier<T>): TypeDescriptor<T[]> {
+  const descriptor = SYMBOL_DESCRIPTOR in input ? input[SYMBOL_DESCRIPTOR] : input
+
   function validate(input: unknown): input is T[] {
     return Array.isArray(input) && input.every(descriptor.validate)
   }
@@ -140,7 +140,7 @@ function describeArray<T extends TypeDescriptor<any>>(
     get propDescriptors() {
       return {} as PropDescriptors<T[]>
     },
-  } as T extends TypeDescriptor<infer S> ? TypeDescriptor<S[]> : never
+  }
 }
 
 function describeObject<T extends {}>(

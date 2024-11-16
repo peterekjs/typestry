@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'vitest'
 
 import { describeArray, describeInstance, describePrimitive, describeObject, describeType } from './describe'
+import { createIdentifier } from './identifier'
+import { TypeDescriptor } from './definitions'
 
 const validateBoolean = (v: unknown): v is boolean => typeof v === 'boolean'
 
@@ -58,15 +60,19 @@ describe('describe', () => {
 
   test('describeArray', () => {
     const booleanType = describePrimitive('boolean', validateBoolean)
-    const arrayType = describeArray(booleanType)
 
-    expect(arrayType.name).to.be.eq('boolean[]')
-    expect(arrayType.validate([])).to.be.true
-    expect(arrayType.validate([true, false, false, true])).to.be.true
-    expect(arrayType.validate([true, false, 0, 1])).to.be.false
-    expect(arrayType.equals([true, false], [true, false])).to.be.true
-    expect(arrayType.primitive).to.be.false
-    expect(arrayType.props).to.be.eq(null)
+    testDescriptor(describeArray(booleanType))
+    testDescriptor(describeArray(createIdentifier(booleanType)))
+
+    function testDescriptor(descriptor: TypeDescriptor<boolean[]>) {
+      expect(descriptor.name).to.be.eq('boolean[]')
+      expect(descriptor.validate([])).to.be.true
+      expect(descriptor.validate([true, false, false, true])).to.be.true
+      expect(descriptor.validate([true, false, 0, 1])).to.be.false
+      expect(descriptor.equals([true, false], [true, false])).to.be.true
+      expect(descriptor.primitive).to.be.false
+      expect(descriptor.props).to.be.eq(null)
+    }
   })
 
   test('describeObject', () => {

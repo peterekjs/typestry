@@ -21,6 +21,12 @@ import { intersectIdentifiers, unionIdentifiers } from '../merge'
 import { $positiveNumber, $safeInteger } from './numbers'
 
 testIdentity($Map, pick(['Map']))
+describe('$Map', () => {
+  test('props', () => {
+    expect($Map.props).to.be.empty
+  })
+})
+
 testIdentity($Set, pick(['Set']))
 testIdentity($WeakMap, pick(['WeakMap']))
 testIdentity($WeakSet, pick(['WeakSet']))
