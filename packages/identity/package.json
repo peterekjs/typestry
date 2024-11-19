@@ -1,6 +1,6 @@
 {
   "name": "@typestry/identity",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Type identity TypeScript/JavaScript helpers",
   "keywords": [
     "typescript",
