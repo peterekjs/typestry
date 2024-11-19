@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { describePrimitive, describeObject } from './describe'
 import { intersectDescriptors, intersectIdentifiers, unionDescriptors, unionIdentifiers } from './merge'
 import { createIdentifier } from './identifier'
-import { $boolean, $number } from './lib'
+import { $boolean, $number, $string } from './lib'
 
 const validateBoolean = (v: unknown): v is boolean => typeof v === 'boolean'
 const validateNumber = (v: unknown): v is number => typeof v === 'number'
@@ -102,13 +102,26 @@ describe('merge', () => {
     expect(mergedType.validate(0)).to.be.true
   })
 
-  test('unionIdentifiers', () => {
-    const $foo = createIdentifier(describePrimitive('foo', validateBoolean))
-    const $bar = createIdentifier(describePrimitive('bar', validateNumber))
-
-    const $merged = unionIdentifiers($foo, $bar)
+  test('union primitive identifiers', () => {
+    const $merged = unionIdentifiers($boolean, $number)
     expect($merged.is(0)).to.be.true
     expect($merged.is(true)).to.be.true
+    expect(() => unionIdentifiers($boolean, {} as any)).to.throw()
+  })
+
+  test('union non-primitive identifiers', () => {
+    const $foo = createIdentifier(describeObject('fooz', {
+      foo: $number
+    }))
+    const $bar = createIdentifier(describeObject('bar', {
+      foo: $boolean
+    }))
+
+    const $merged = unionIdentifiers($foo, $bar)
+    expect($merged.props.foo.is(0)).to.be.true
+    expect($merged.props.foo.is(true)).to.be.true
+    expect($merged.is({ foo: 0 })).to.be.true
+    expect($merged.is({ foo: true })).to.be.true
     expect(() => unionIdentifiers($foo, {} as any)).to.throw()
   })
 })

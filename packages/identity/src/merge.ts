@@ -47,11 +47,27 @@ function intersectDescriptors<T extends TypeDescriptor<any>[]>(...descriptors: T
       ) as Intersect<TypeFromDescriptor<T[number]>> extends object ? Set<keyof Intersect<TypeFromDescriptor<T[number]>>> : null
     },
     get propDescriptors() {
-      return Object.fromEntries(
-        descriptors.map(x => Object.entries(x.propDescriptors)).flat(1)
-      ) as PropDescriptors<Intersect<TypeFromDescriptor<T[number]>>>
+      return recursiveIntersectPropDescriptors(descriptors)
     },
   } satisfies TypeDescriptorIntersection<T>
+}
+
+function recursiveIntersectPropDescriptors<T extends TypeDescriptor<any>[]>(descriptors: T): PropDescriptors<Intersect<TypeFromDescriptor<T[number]>>> {
+  const stash = new Map()
+  const merged: PropDescriptors<any> = {}
+
+  for (const { propDescriptors } of descriptors) {
+    for (const [prop, descriptor] of Object.entries(propDescriptors)) {
+      if (!stash.has(prop)) stash.set(prop, new Set())
+      stash.get(prop)!.add(descriptor)
+    }
+  }
+
+  for (const [prop, descriptors] of stash) {
+    merged[prop] = descriptors.size > 1 ? intersectDescriptors(...descriptors) : [...descriptors].at(0)
+  }
+
+  return merged
 }
 
 function intersectIdentifiers<T extends TypeIdentifier<any>[]>(...identifiers: T): TypeIdentifierIntersection<T> {
@@ -96,11 +112,27 @@ function unionDescriptors<T extends TypeDescriptor<any>[]>(...descriptors: T): T
       ) as TypeFromDescriptor<T[number]> extends object ? Set<keyof TypeFromDescriptor<T[number]>> : null
     },
     get propDescriptors() {
-      return Object.fromEntries(
-        descriptors.map(x => Object.entries(x.propDescriptors)).flat(1)
-      ) as PropDescriptors<TypeFromDescriptor<T[number]>>
+      return recursiveUnionPropDescriptors(descriptors)
     },
   } satisfies TypeDescriptorUnion<T>
+}
+
+function recursiveUnionPropDescriptors<T extends TypeDescriptor<any>[]>(descriptors: T): PropDescriptors<TypeFromDescriptor<T[number]>> {
+  const stash = new Map()
+  const merged: PropDescriptors<any> = {}
+
+  for (const { propDescriptors } of descriptors) {
+    for (const [prop, descriptor] of Object.entries(propDescriptors)) {
+      if (!stash.has(prop)) stash.set(prop, new Set())
+      stash.get(prop)!.add(descriptor)
+    }
+  }
+
+  for (const [prop, descriptors] of stash) {
+    merged[prop] = descriptors.size > 1 ? unionDescriptors(...descriptors) : [...descriptors].at(0)
+  }
+
+  return merged
 }
 
 function unionIdentifiers<T extends TypeIdentifier<any>[]>(...identifiers: T): TypeIdentifierUnion<T> {
