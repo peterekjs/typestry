@@ -1,4 +1,5 @@
 import { SYMBOL_DESCRIPTOR, type PropDescriptors, type PropIdentifiers, type TypeDescriptor, type TypeIdentifier } from './definitions'
+import { describeObject } from './describe'
 import { TypeAssertionError } from './errors'
 
 function createIdentifier<T>(descriptor: TypeDescriptor<T>): TypeIdentifier<T> {
@@ -15,22 +16,42 @@ function createIdentifier<T>(descriptor: TypeDescriptor<T>): TypeIdentifier<T> {
     return input
   }
 
+  function getProps() {
+    if (isNonPrimitiveDescriptor(descriptor)) {
+      return Object.fromEntries(mapIdentifiers(descriptor.propDescriptors)) as PropIdentifiers<T>
+    } else {
+      return {} as PropIdentifiers<T>
+    }
+  }
+
+  function omit<K extends keyof T>(...keys: K[]): TypeIdentifier<Omit<T, K>> {
+    const uniqueKeys = new Set<keyof T>(keys)
+
+    return createIdentifier<Omit<T, K>>(describeObject(`Omit<${descriptor.name}, ${[...uniqueKeys].join(' | ')}>`, {
+      ...Object.fromEntries(omitKeys<T, keyof T>(getProps(), uniqueKeys)) as any // TODO: !!!
+    }))
+  }
+
   return {
     get name() {
       return descriptor.name
     },
     get props() {
-      if (isNonPrimitiveDescriptor(descriptor)) {
-        return Object.fromEntries(mapIdentifiers(descriptor.propDescriptors)) as PropIdentifiers<T>
-      } else {
-        return {} as PropIdentifiers<T>
-      }
+      return getProps()
     },
+    omit,
     is,
     assert,
     ensure,
     equals: descriptor.equals,
     [SYMBOL_DESCRIPTOR]: descriptor,
+  }
+}
+
+function* omitKeys<T, K extends keyof T>(props: PropIdentifiers<T>, omit: Set<K>): Generator<[K, PropIdentifiers<T>[K]]> {
+  for (const [key, value] of Object.entries(props) as [K, PropIdentifiers<T>[K]][]) {
+    if (omit.has(key)) continue
+    yield [key, value]
   }
 }
 
