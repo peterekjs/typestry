@@ -32,6 +32,18 @@ function createIdentifier<T>(descriptor: TypeDescriptor<T>): TypeIdentifier<T> {
     }))
   }
 
+  function extract<S extends T>(input: S): Pick<S, keyof T> {
+    assert(input)
+
+    return Object.fromEntries(extractEntries(input)) as Pick<S, keyof T>
+  }
+
+  function* extractEntries(input: T): Generator<[keyof T, T[keyof T]]> {
+    for (const key of Object.keys(getProps()) as (keyof T)[]) {
+      yield [key, input[key]!]
+    }
+  }
+
   return {
     get name() {
       return descriptor.name
@@ -44,6 +56,7 @@ function createIdentifier<T>(descriptor: TypeDescriptor<T>): TypeIdentifier<T> {
     assert,
     ensure,
     equals: descriptor.equals,
+    extract,
     [SYMBOL_DESCRIPTOR]: descriptor,
   }
 }

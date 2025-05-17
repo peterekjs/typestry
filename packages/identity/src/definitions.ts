@@ -23,6 +23,7 @@ type TypeIdentifier<T> = {
   is(input: unknown): input is T
   assert(input: unknown): asserts input is T
   ensure(input: unknown): T
+  extract<S extends T>(input: S): Pick<S, keyof T>
   omit<K extends keyof T>(...keys: K[]): TypeIdentifier<Omit<T, K>>
   equals: TypeDescriptor<T>['equals']
   readonly props: PropIdentifiers<T>
