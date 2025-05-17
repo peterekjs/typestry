@@ -28,8 +28,8 @@ const TEST_VALUES = {
   'async function': async function foo() {},
   'lambda': () => {},
   'lambda (returns value)': () => 0,
-  'generator': function* foo() {},
-  'async generator': async function* foo() {},
+  'generator': function *foo() {},
+  'async generator': async function *foo() {},
   'class': class Foo {},
   'empty object': {},
   'non-empty object': { foo: 'bar' },
@@ -70,12 +70,12 @@ const PRIMITIVE_KEYS: TestKey[] = [
   'undefined',
 ]
 
-function* pick(keys: Iterable<TestKey>): Generator<[TestKey, unknown]> {
+function *pick(keys: Iterable<TestKey>): Generator<[TestKey, unknown]> {
   for (const key of keys) {
     if (Object.hasOwn(TEST_VALUES, key)) yield [key, TEST_VALUES[key]]
   }
 }
-function* drop(keys: Iterable<TestKey>): Generator<[TestKey, unknown]> {
+function *drop(keys: Iterable<TestKey>): Generator<[TestKey, unknown]> {
   const keysToDrop = new Set(keys)
   for (const [key, value] of Object.entries(TEST_VALUES) as Iterable<[TestKey, unknown]>) {
     if (keysToDrop.has(key)) continue
@@ -85,7 +85,7 @@ function* drop(keys: Iterable<TestKey>): Generator<[TestKey, unknown]> {
 
 function testIdentity(
   identity: TypeIdentifier<any>,
-  positiveResultingEntries: Iterable<[TestKey, unknown]>
+  positiveResultingEntries: Iterable<[TestKey, unknown]>,
 ) {
   describe(identity.name, () => {
     const positive = new Map(positiveResultingEntries)

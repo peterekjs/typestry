@@ -25,7 +25,7 @@ describe('identity', () => {
   test('$PointRange', () => {
     const pointRange = {
       min: point,
-      max: { x: Infinity, y: Infinity }
+      max: { x: Infinity, y: Infinity },
     } satisfies PointRange
     expect($PointRange.is(pointRange)).to.be.true
   })

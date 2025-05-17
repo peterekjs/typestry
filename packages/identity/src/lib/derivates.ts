@@ -9,7 +9,7 @@ import { $function } from './functions'
 import { $null, $undefined } from './primitives'
 
 const $defined: TypeIdentifier<Defined<unknown>> = createIdentifier(
-  describeType({ name: 'defined', validate: (v): v is Defined<unknown> => typeof v !== 'undefined' })
+  describeType({ name: 'defined', validate: (v): v is Defined<unknown> => typeof v !== 'undefined' }),
 )
 
 // Not exactly primitives, but are widely used as these contain basic characteristics

@@ -46,7 +46,7 @@ describe('edge cases', () => {
   test('object with optional properties', () => {
     const $SomeObject = createIdentifier(describeObject('SomeObject', {
       foo: $number,
-      bar: maybe($number)
+      bar: maybe($number),
     }))
 
     expect($SomeObject.is({ foo: 0 })).to.be.true

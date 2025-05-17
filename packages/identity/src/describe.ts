@@ -15,7 +15,7 @@ function comparePrimitives<T>(a: T, b: T) {
   return a === b
 }
 function compareProps<T extends object>(props: Iterable<keyof T> = []): (a: T, b: T) => boolean {
-  return (a: T, b: T) => [...props].every((p) => a[p] === b[p])
+  return (a: T, b: T) => [...props].every(p => a[p] === b[p])
 }
 
 function createEqualityAssertion<T>(name: string, validate: (input: unknown) => input is T) {
@@ -83,7 +83,7 @@ function describeType<T>({ name, validate, props, ...options }: DescribeTypeOpti
 
 function describeInstance<T extends object>(
   Ctor: new () => T,
-  instantiator: () => NoInfer<T> = () => new Ctor()
+  instantiator: () => NoInfer<T> = () => new Ctor(),
 ): TypeDescriptor<T> {
   const props = new Set(Object.keys(instantiator() ?? Object.getOwnPropertyDescriptors(Ctor).prototype.value) as (keyof T)[])
   const validate = (input: unknown): input is T => input instanceof Ctor
@@ -145,7 +145,7 @@ function describeArray<T>(input: TypeDescriptor<T> | TypeIdentifier<T>): TypeDes
 
 function describeObject<T extends {}>(
   name: string,
-  propDefinitions: PropDefinitions<T>
+  propDefinitions: PropDefinitions<T>,
 ): TypeDescriptor<T> {
   if (!isObject(propDefinitions)) {
     throw new TypeError('Expected propDescriptors to be an Object', { cause: { propDefinitions } })
@@ -174,7 +174,7 @@ function describeObject<T extends {}>(
     return results.size === 1 && results.has(true)
   }
 
-  function* collectPropDescriptorEntries(input: PropDefinitions<T>): Generator<[keyof T, TypeDescriptor<T[keyof T]>]> {
+  function *collectPropDescriptorEntries(input: PropDefinitions<T>): Generator<[keyof T, TypeDescriptor<T[keyof T]>]> {
     for (const [prop, definition] of Object.entries(input) as [keyof T, TypeDescriptor<T[keyof T]>][]) {
       if (!definition || typeof definition !== 'object') continue
       if (SYMBOL_DESCRIPTOR in definition) {
@@ -185,7 +185,7 @@ function describeObject<T extends {}>(
     }
   }
 
-  function* validateProps(a: T, b: T) {
+  function *validateProps(a: T, b: T) {
     for (const [key, descriptor] of getPropEntries()) {
       const propError = preparePropError(key, descriptor.name, { a, b })
 
@@ -203,7 +203,7 @@ function describeObject<T extends {}>(
   function preparePropError(key: keyof T, typeName: string, cause: any) {
     return (which: string) => new TypeError(
       `Property '${name}.${String(key)}' validation failed for ${which} argument. Expected type of ${typeName}.`,
-      { cause }
+      { cause },
     )
   }
 

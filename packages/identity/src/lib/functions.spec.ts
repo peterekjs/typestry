@@ -23,7 +23,7 @@ testIdentity(
     'generator',
     'async generator',
     'class',
-  ])
+  ]),
 )
 
 testIdentity(
@@ -38,12 +38,12 @@ testIdentity(
     'generator',
     'async generator',
     'class',
-  ])
+  ]),
 )
 
 testIdentity(
   $Function,
-  pick(['function', 'function (throws exception)', 'function (named)', 'lambda', 'lambda (returns value)'])
+  pick(['function', 'function (throws exception)', 'function (named)', 'lambda', 'lambda (returns value)']),
 )
 
 testIdentity($AsyncFunction, pick(['async function']))

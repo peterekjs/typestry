@@ -19,7 +19,8 @@ function createIdentifier<T>(descriptor: TypeDescriptor<T>): TypeIdentifier<T> {
   function getProps() {
     if (isNonPrimitiveDescriptor(descriptor)) {
       return Object.fromEntries(mapIdentifiers(descriptor.propDescriptors)) as PropIdentifiers<T>
-    } else {
+    }
+    else {
       return {} as PropIdentifiers<T>
     }
   }
@@ -28,7 +29,7 @@ function createIdentifier<T>(descriptor: TypeDescriptor<T>): TypeIdentifier<T> {
     const uniqueKeys = new Set<keyof T>(keys)
 
     return createIdentifier<Omit<T, K>>(describeObject(`Omit<${descriptor.name}, ${[...uniqueKeys].join(' | ')}>`, {
-      ...Object.fromEntries(omitKeys<T, keyof T>(getProps(), uniqueKeys)) as any // TODO: !!!
+      ...Object.fromEntries(omitKeys<T, keyof T>(getProps(), uniqueKeys)) as any, // TODO: !!!
     }))
   }
 
@@ -38,7 +39,7 @@ function createIdentifier<T>(descriptor: TypeDescriptor<T>): TypeIdentifier<T> {
     return Object.fromEntries(extractEntries(input)) as Pick<S, keyof T>
   }
 
-  function* extractEntries(input: T): Generator<[keyof T, T[keyof T]]> {
+  function *extractEntries(input: T): Generator<[keyof T, T[keyof T]]> {
     for (const key of Object.keys(getProps()) as (keyof T)[]) {
       yield [key, input[key]!]
     }
@@ -61,7 +62,7 @@ function createIdentifier<T>(descriptor: TypeDescriptor<T>): TypeIdentifier<T> {
   }
 }
 
-function* omitKeys<T, K extends keyof T>(props: PropIdentifiers<T>, omit: Set<K>): Generator<[K, PropIdentifiers<T>[K]]> {
+function *omitKeys<T, K extends keyof T>(props: PropIdentifiers<T>, omit: Set<K>): Generator<[K, PropIdentifiers<T>[K]]> {
   for (const [key, value] of Object.entries(props) as [K, PropIdentifiers<T>[K]][]) {
     if (omit.has(key)) continue
     yield [key, value]
@@ -72,7 +73,7 @@ function isNonPrimitiveDescriptor<T>(descriptor: TypeDescriptor<T>): descriptor 
   return !descriptor.primitive
 }
 
-function* mapIdentifiers<T extends object>(descriptors: PropDescriptors<T>): Generator<[keyof T, TypeIdentifier<T[keyof T]>]> {
+function *mapIdentifiers<T extends object>(descriptors: PropDescriptors<T>): Generator<[keyof T, TypeIdentifier<T[keyof T]>]> {
   for (const [prop, descriptor] of Object.entries(descriptors) as Iterable<[keyof T, TypeDescriptor<T[keyof T]>]>) {
     yield [prop, createIdentifier(descriptor)]
   }

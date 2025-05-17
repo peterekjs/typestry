@@ -62,7 +62,7 @@ function getType(value: unknown): ExtendedTypeOf {
 function stripObject<T extends object>(identifier: TypeIdentifier<T>, input: unknown) {
   const descriptor = identifier[SYMBOL_DESCRIPTOR]
   if (descriptor.primitive) {
-    throw new TypeError('Expected non-primitive TypeIdentifier', { cause: { identifier }})
+    throw new TypeError('Expected non-primitive TypeIdentifier', { cause: { identifier } })
   }
   identifier.assert(input)
 
@@ -71,7 +71,7 @@ function stripObject<T extends object>(identifier: TypeIdentifier<T>, input: unk
 
 function pickProps<T extends object, P extends keyof T>(allowedProps: P[] | Set<P>, input: T): Pick<T, P> {
   return Object.fromEntries(
-    Object.entries(input).filter(([key]) => new Set<P>(allowedProps).has(key as P))
+    Object.entries(input).filter(([key]) => new Set<P>(allowedProps).has(key as P)),
   ) as Pick<T, P>
 }
 

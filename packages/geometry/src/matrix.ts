@@ -11,12 +11,12 @@ export function multiplyMatrices(A: Matrix, B: Matrix, ...rest: Matrix[]) {
   const colsB = getMatrixColsSize(B)
 
   // Find the maximum rows and columns to pad both matrices
-  const maxRows = Math.max(rowsA, colsB);  // for the resulting matrix
-  const maxCols = Math.max(colsA, rowsB);  // for multiplication compatibility
+  const maxRows = Math.max(rowsA, colsB) // for the resulting matrix
+  const maxCols = Math.max(colsA, rowsB) // for multiplication compatibility
 
   // Pad both matrices to make them compatible
-  A = padMatrix(A, maxRows, maxCols);
-  B = padMatrix(B, maxCols, maxRows);
+  A = padMatrix(A, maxRows, maxCols)
+  B = padMatrix(B, maxCols, maxRows)
 
   const result: Matrix = Array(rowsA).fill(null).map(() => Array(colsB).fill(0))
 
@@ -35,15 +35,15 @@ export function multiplyMatrices(A: Matrix, B: Matrix, ...rest: Matrix[]) {
 }
 
 export function padMatrix(matrix: Matrix, targetRows: number, targetCols: number): Matrix {
-  const paddedMatrix = matrix.map(row => {
-      // Pad rows with zeros until they reach the target number of columns
-      return [...row, ...Array(targetCols - row.length).fill(0)];
-  });
+  const paddedMatrix = matrix.map((row) => {
+    // Pad rows with zeros until they reach the target number of columns
+    return [...row, ...Array(targetCols - row.length).fill(0)]
+  })
   // Add new rows of zeros if the matrix has fewer rows than the target
   while (paddedMatrix.length < targetRows) {
-      paddedMatrix.push(Array(targetCols).fill(0));
+    paddedMatrix.push(Array(targetCols).fill(0))
   }
-  return paddedMatrix;
+  return paddedMatrix
 }
 
 function getMatrixColsSize(matrix: Matrix) {

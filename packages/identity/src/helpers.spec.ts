@@ -94,7 +94,7 @@ describe('stripObject', () => {
   test('basic functionality', () => {
     const $Foo = createIdentifier(describeObject('Foo', {
       foo: $number,
-      bar: $number
+      bar: $number,
     }))
 
     expect(pickProps(['foo', 'bar'], { foo: 1, bar: 0, baz: true })).to.eql({ foo: 1, bar: 0 })

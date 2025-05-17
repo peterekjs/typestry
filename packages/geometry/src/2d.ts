@@ -5,12 +5,12 @@ import { applyMatrixToPoint, multiplyMatrices } from './matrix'
 const transformParents = new WeakMap<TransformMatrix2D, TransformMatrix2D>()
 
 export class TransformMatrix2D {
-  a = 1;
-  b = 0;
-  c = 0;
-  d = 0;
-  e = 1;
-  f = 0;
+  a = 1
+  b = 0
+  c = 0
+  d = 0
+  e = 1
+  f = 0
 
   get stack(): TransformMatrix2D[] {
     return [...collectTransformStack(this)]
@@ -74,7 +74,7 @@ export class TransformMatrix2D {
     const transform = [
       [Math.cos(rad), -Math.sin(rad), 0],
       [Math.sin(rad), Math.cos(rad), 0],
-      [0, 0, 1]
+      [0, 0, 1],
     ]
     return this.#createNextInstance(multiplyMatrices([...this], transform))
   }
@@ -209,18 +209,23 @@ export class Rect2D implements Rect {
   get left(): number {
     return this.x
   }
+
   get right(): number {
     return this.x + this.width
   }
+
   get top(): number {
     return this.y
   }
+
   get bottom(): number {
     return this.y + this.height
   }
+
   get center(): Point2D {
     return new Point2D(this.x + this.width / 2, this.y + this.height / 2)
   }
+
   get points(): Generator<Point2D> {
     return getRect2DCornerPoints(this)
   }
@@ -270,17 +275,17 @@ function getPointRange(points: Point[]): PointRange {
 
   return {
     min,
-    max
+    max,
   }
 }
 
-function* collectTransformStack(matrix: TransformMatrix2D): Generator<TransformMatrix2D, void, undefined> {
+function *collectTransformStack(matrix: TransformMatrix2D): Generator<TransformMatrix2D, void, undefined> {
   yield matrix
   if (!transformParents.has(matrix)) return
   yield* collectTransformStack(transformParents.get(matrix)!)
 }
 
-export function* getRect2DCornerPoints(rect: Rect) {
+export function *getRect2DCornerPoints(rect: Rect) {
   yield new Point2D(rect.x, rect.y)
   yield new Point2D(rect.x + rect.width, rect.y)
   yield new Point2D(rect.x + rect.width, rect.y + rect.height)

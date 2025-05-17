@@ -12,7 +12,7 @@ describe('describe', () => {
     const someType = describeType<Foo>({
       name: 'someType',
       validate: (x: any): x is Foo => typeof x?.foo === 'number',
-      props: ['foo']
+      props: ['foo'],
     })
 
     expect(someType.name).to.eq('someType')
@@ -95,7 +95,7 @@ describe('describe', () => {
 
     const bar = describeObject('bar', {
       a: describePrimitive('boolean', validateBoolean),
-      b: describePrimitive('boolean', validateBoolean)
+      b: describePrimitive('boolean', validateBoolean),
     })
 
     expect(bar.validate({ a: true, b: true })).to.be.true

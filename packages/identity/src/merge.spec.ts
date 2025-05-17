@@ -31,10 +31,10 @@ describe('merge', () => {
 
   test('intersect object descriptors', () => {
     const fooType = describeObject('foo', {
-      foo: $boolean
+      foo: $boolean,
     })
     const barType = describeObject('bar', {
-      bar: $number
+      bar: $number,
     })
 
     const mergedType = intersectDescriptors(fooType, barType)
@@ -72,10 +72,10 @@ describe('merge', () => {
 
   test('union object descriptors', () => {
     const fooType = describeObject('foo', {
-      foo: describePrimitive('boolean', validateBoolean)
+      foo: describePrimitive('boolean', validateBoolean),
     })
     const barType = describeObject('bar', {
-      bar: describePrimitive('number', validateNumber)
+      bar: describePrimitive('number', validateNumber),
     })
 
     const mergedType = unionDescriptors(fooType, barType)
@@ -90,7 +90,7 @@ describe('merge', () => {
 
   test('merge descriptors of object with primitive', () => {
     const fooType = describeObject('foo', {
-      foo: describePrimitive('boolean', validateBoolean)
+      foo: describePrimitive('boolean', validateBoolean),
     })
     const barType = describePrimitive('number', validateNumber)
 
@@ -111,10 +111,10 @@ describe('merge', () => {
 
   test('union non-primitive identifiers', () => {
     const $foo = createIdentifier(describeObject('fooz', {
-      foo: $number
+      foo: $number,
     }))
     const $bar = createIdentifier(describeObject('bar', {
-      foo: $boolean
+      foo: $boolean,
     }))
 
     const $merged = unionIdentifiers($foo, $bar)
